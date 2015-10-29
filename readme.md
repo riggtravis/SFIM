@@ -1,5 +1,7 @@
 © (C) Copyright 2015 Travis Rigg
+
 © Copyright phpBB Limited 2003-2014
+
 This project is distributed under the terms of the GNU General Public License v2
 
 This file is part of SFIM.
