@@ -148,7 +148,7 @@ post_msg_id, topic_id, and poster_id are all required fields.
     extension				varchar				What kind of file is this? .png? .jpg?
     mimetype				varchar				How should the web browser handle this?
     file_size				unsigned int	How big is this file in bytes?							0
-    filetime				timestamp			SQL timestamp, automatically generated.
+    file_date				timestamp			SQL timestamp, automatically generated.
     thumbnail				boolean				Is there a thumbnail for this file?					0
 
 The file size should only allow sane file sizes. This is a forum, not an image
@@ -240,7 +240,7 @@ by a different method, such as flat files on the server.
 
 ###		12.	confirmations				-Contains session information for confirm pages
 ####			Keys:
-    confirm			char	Primary	Key									auto_increment
+    confirm_id	char	Primary	Key									auto_increment
     session_id	char	Foreign	References sessions
 
 ####			Attributes:
@@ -809,7 +809,6 @@ primary key in order to gauruntee uniqueness.
 		birthday					varchar				dd-mm-yyyy
 		last_visit_date		timestamp			When was the last time the user visited?	0
 		lastmark					timestamp			Last time the user marked forums read			0
-		lastpost_time			timestamp			The time of the latest post by the user		0
 		lastpage					varchar				The URL of the last page visited by the user
 		last_confirm_key	varchar				Code used for security reasons
 		last_search_time	timestamp			The last time user performed a search			0
@@ -826,9 +825,7 @@ primary key in order to gauruntee uniqueness.
 		new_message				tinyint				The number of new private messages.
 		unread_message		tinyint				The number of unread private messages.
 		last_message			date					The last time the user sent a message			0
-		message_rules			boolean				Flag indicating if the user has rules	false
-		full_folder				int						What to do when a folder is full				 -3
-		emailtime					timestamp			The time the user sent an email						0
+		email_date				timestamp			The time the user sent an email						0
 		topic_show_days		unsigned int	The maximum age of a topic to be shown		0
 		topic_sortby_type	tinyint				author, replies, time, subject, views.		2
 		topic_sortby_asc	boolean				Sort ascending or descending.					false
@@ -905,10 +902,13 @@ information should be stored in the private messages table. However, this table
 should also be protected from malicious people learning things that they should
 not. For this reason I am leaving that field for now.
 
-I'm much more positive that the last post time field should be removed. However,
-this branch is only for fixing style and data storage types. I will create an
-issue on github describing the problem of having unneeded things stored in silly
-tables.
+I'm much more positive that the last post time field should be removed.
+
+message_rules has been deprecated not because I want to but because I couldn't
+figure out how to make folders work. For this reason it doesn't make sense to
+have rules that describe folders.
+
+full_folder has been removed for the same reason as message_rules.
 
 The following are required fields:
 * user_birthday
