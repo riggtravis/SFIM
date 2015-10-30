@@ -83,7 +83,7 @@ role_id	unsigned int	Primary	Key
     role_name					varchar	Title of the role
     role_description	text		What are the responsibilities of this role?
 
-###		4.	acl_roles_data			-Permissions each role contains
+###		4.	acl_assignments			-Permissions each role contains
 ####			Keys:
     role_id					unsigned int	Foreign	References acl_roles table
     auth_option_id	unsigned int	Foreign	References acl_options table
@@ -107,7 +107,7 @@ I believe that auth_setting has to do with authentification based on its name. I
 think that what this has to do with is whether or not a user has to be logged in
 or not in order to do a specified task.
 
-###		5.	acl_users						-Permissions assigned
+###		5.	acl_people					-Permissions assigned
 ####			Keys:
     user_id					unsigned int	Foreign	References users table
     forum_id				unsigned int	Foreign	References forums table
@@ -129,7 +129,7 @@ way.
 ###		6.	attachments					-Information on attachments
 ####			Keys:
     attach_id					unsigned int	Primary	Key		  							auto_increment
-    post_msg_id				unsigned int	Foreign References posts table
+    post_message_id		unsigned int	Foreign References posts table
     topic_id					unsigned int	Foreign	References topics table
     poster_id					unsigned int	Foreign	References users table
     physical_filename	varchar				Unique	name of the file stored physically
@@ -140,12 +140,12 @@ post_msg_id, topic_id, and poster_id are all required fields.
     in_message			boolean				Is this attachment in a private message false
     is_orphan				boolean				Is this attachment unused?							 true
     real_filename		varchar				Name of the file as the user uploaded it.
-    download_count	unsigned int	How many times the file has been viewed?		0
+    download_tally	unsigned int	How many times the file has been viewed?		0
     attach_comment	text					Comment
     extension				varchar				What kind of file is this? .png? .jpg?
     mimetype				varchar				How should the web browser handle this?
-    filesize				unsigned int	How big is this file in bytes?							0
-    filetime				unsigned int	Unix time stamp															0
+    file_size				unsigned int	How big is this file in bytes?							0
+    filetime				timestamp			SQL timestamp, automatically generated.
     thumbnail				boolean				Is there a thumbnail for this file?					0
 
 The file size should only allow sane file sizes. This is a forum, not an image
@@ -156,7 +156,10 @@ The is_orphan field will be used for the cleansing of files that are wasting
 space on the server. It should be possible for administrators to run a purge
 directly or to have a scheduled cleaning utility.
 
-###		7.	banlist							-Banned users, ip addresses, or emails
+Filetime is a required field and should be automatically created when an entry
+to the table is created.
+
+###		7.	bans							-Banned users, ip addresses, or emails
 This table doesn't make much sense. I think the best way to do this would be to
 separate this table into three different tables. the banned_users_list, the
 banned_ip_addresses_list, and the banned_emails_list. However, for v0.1 of SFIM
@@ -172,14 +175,14 @@ prefer to esnure that users on a SFIM based forum have an enjoyable experience.
 ####			Keys:
     ban_id			unsigned int	Primary	Key
     user_id			unsigned int	Foreign	References users table
-    ip_address	varchar				Unique	Banned IP address
-    email				varchar				Unique	The email address of someone being banned
+    ip_addr			varchar				Unique	Banned IP address
+    email_addr	varchar				Unique	The email address of someone being banned
 
 ####			Attributes:
-    ban_start		unsigned int	When did the user get banned?
-    ban_end			unsigned int	When will the user be allowed to rejoin activities
-    ban_exclude	boolean				Exclude this user from a general ban?
-    ban_reason	text					Why was this user banned?
+    ban_date			timestamp		When did the user get banned?
+    ban_end_date	timestamp		When will the user be allowed to rejoin activities
+    ban_exclude		boolean			Exclude this user from a general ban?
+    ban_reason		text				Why was this user banned?
 
 One of the following must be set for the entry to be valid:
 * user_id
@@ -220,7 +223,7 @@ conversation. A single message cannot exist without a topic.
     bot_name		varchar				What is the name of the bot?
     user_id			unsigned int	References users table
     agent				varchar				Undocumented
-    ip_address	varchar				What is the ip address of the bot?
+    ip_addr			varchar				What is the ip address of the bot?
 
 user_id is a required field and cannot be left blank.
 
@@ -232,7 +235,7 @@ The documentation for this table doesn't make sense to me. I think that I can
 get away with not having this table at all. I think configuration can be handled
 by a different method, such as flat files on the server.
 
-###		12.	confirm							-Contains session information for confirm pages
+###		12.	confirmations				-Contains session information for confirm pages
 ####			Keys:
     confirm			char	Primary	Key									auto_increment
     session_id	char	Foreign	References sessions
@@ -243,7 +246,7 @@ by a different method, such as flat files on the server.
     seed					int			The seed that should be used to initialize the RNG.	0
     attempts			int			The number of attempts that have been made.					0
 
-###		13.	disallow						-Disallowed usernames
+###		13.	username_rules			-Disallowed usernames
 ####			Keys:
     disallow_id	unsigned int	Primary	Key
 
@@ -253,7 +256,7 @@ by a different method, such as flat files on the server.
 Implementers of SFIM interfaces are encouraged to make use of regular
 expressions for this table.
 
-###		14. drafts							Drafts of future posts/private messages.
+###		14. drafts							-Drafts of future posts/private messages.
 ####			Keys:
     draft_id	unsigned int	Primary	Key														auto_increment
     user_id		unsigned int	Foreign	Reference to the users table.
@@ -261,9 +264,9 @@ expressions for this table.
     forum_id	unsigned int	Foreign	Reference to the forums table.
 
 ####			Attributes:
-    save_time			int			What time was the message saved?	0
-    draft_subject	varchar	potential title for the draft.
-    draft_message	text		potential body for the draft.
+    save_time			timestamp	What time was the message saved?
+    draft_subject	varchar		potential title for the draft.
+    draft_message	text			potential body for the draft.
 
 ###		15. extension_groups		-Extensions Groups, associate extensions with type
 This table is used to help the forum system understand what to do with files.
@@ -277,7 +280,7 @@ This table is used to help the forum system understand what to do with files.
     allow_group			boolean				Is this group allowed to be posted?			false
     download_mode		boolean				Should this file be viewed immediately?	 true
     upload_icon			varchar				Icon to be shown when users are making uploads.
-    max_filesize		unsigned int	What's the biggest a file can be in bytes?	0
+    max_file_size		unsigned int	What's the biggest a file can be in bytes?	0
     allowed_forums	text					Where is this file type allowed?
     allow_in_pm			boolean				Is this sendable in private messages?  	false
 
@@ -329,15 +332,15 @@ implementers of the SFIM standard to decide how to increase speed.
     topics_per_page		tinyint				This attribute has 16 possible values.		0
     type							tinyint				Is this a category, a post, or a link?		0
     status						tinyint(2)		FORUM_CAT, FORUM_Post, or FORUM_LINK			0
-    posts							unsigned int	How many posts in the forum?							0
-    topics						unsigned int	How many valid discussions in the forum?	0
-    topics_real				unsigned int	How many discussions, including invalid?  0
+    post_total				unsigned int	How many posts in the forum?							0
+    topic_total				unsigned int	How many valid discussions in the forum?	0
+    topic_real_total	unsigned int	How many discussions, including invalid?  0
     forum_flags				tinyint				This attribute has 4 possible values.			0
     display_on_index	boolean				Will this forum appear on main page?   true
     enable_indexing		boolean				Allows for faster searching						 true
     enable_icons			boolean				I'm not sure what this does						 true
     enable_prune			boolean				Has to do with clearing poor posts		false
-    prune_next				unsigned int	What time will the next prune happen			0
+    prune_next				timestamp			What time will the next prune happen			0
     prune_days				tinyint				What days is the pruner scheduled to run	0
     prune_viewed			tinyint				This attribute has 16 possible values.		0
     prune_freq				tinyint				How often should prunes occur							0
@@ -370,7 +373,7 @@ invited emails to the whitelist. Another way to do it is to perform a hashed
 handshake for users attempting to use the forum. Either way, a list of users who
 are allowed to use a forum is better than having a password for a forum.
 
-###		18.	forums_access				-Store who is logged into password protected forums
+###		18.	current_forum_users	-Store who is logged into protected forums
 ####			Keys:
     session_id	binary char		Foreign	References the sessions table.
     forum_id		unsigned int	Foreign	References the forums table.
@@ -384,18 +387,18 @@ from the sessions table will already contain the user information. Implementers
 of SFIM who want to do things this way for speed purposes are encouraged to, but
 this won't be part of future SFIM models because it is less clear.
 
-###		19. forums_track				-Unread post information is stored here.
+###		19. forums_visits				-Unread post information is stored here.
 ####			Keys:
     user_id		unsigned int	Foreign	References the users table.
     forum_id	unsigned int	Foreign	References the forums table.
 
 ####			Attributes:
-    mark_time	unsigned int	Used for time based interactions
+    mark_time	timestamp	Used for time based interactions
 
 user_id and forum_id combine to create the primary key, and are therefor
 required fields.
 
-###		20.	forums_watch				-Subscribed forums
+###		20.	watched_forums			-Subscribed forums
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table.
     user_id		unsigned int	Foreign	References the users table.
@@ -422,9 +425,9 @@ held in it is unique. This will need to be remedied in the future.
     avatar_height		tinyint(4)		How tall is the avatar image?								0
     rank						unsigned int	Undocumented																0
     color						varchar				Undocumented
-    sig_chars				unsigned int	How many characters in signatures allowed?	0
+    sig_char_num		unsigned int	How many characters in signatures allowed?	0
     receive_pm			boolean				Can users receive private messages?			false
-    message_limit		unsigned int	What's the biggest private message sendable	0
+    msg_limit_size	unsigned int	What's the biggest private message sendable	0
     legend					boolean				Does this group have a legend?					 true
 
 I don't know what the color attribute is for, but I assume that it is for a
@@ -437,7 +440,7 @@ am unclear on what this is for, I will leave it for now an remove it for version
 I think that this table is purely about how the user interface will look. This
 should be handled by an external configuration file.
 
-###		23.	lang								-Installed languages
+###		23.	languages						-Installed languages
 I believe that this table can be managed by external configuration files. On the
 other hand, most forums I have interacted with have had a language menu that
 acted very much as if it was interacting with a database. For this reason I am
@@ -453,7 +456,7 @@ leaving this table in tact with plans to research modifying it.
     local_name		varchar	What is the language called in itself?
     author				varchar	Undocumented
 
-###		24.	log									-Administration/Moderation/Error logs
+###		24.	logs								-Administration/Moderation/Error logs
 ####			Keys:
     log_id			unsigned int	Primary	Key											    auto_increment
     user_id			unsigned int	Foreign	References the users table
@@ -463,8 +466,8 @@ leaving this table in tact with plans to research modifying it.
 
 ####			Attributes:
     log_type  tinyint(2)    administrative, moderative, or error log?         0
-    ip				varchar(40)		IP address used by the user referenced by user_id
-    time			unsigned int	Time log was created.                             0
+    ip_addr		varchar(40)		IP address used by the user referenced by user_id
+    time			timestamp			Time log was created.
     operation	text					A description of what happened
     data			text					Log info
 
@@ -473,16 +476,16 @@ leaving this table in tact with plans to research modifying it.
     user_id	unsigned int	Foreign	References the users table
 
 #### 			Attributes:
-    ip							varchar	Where was the login attempt made from?
-    browser					varchar	What kind of web browser was the attempt made from?
-    forwarded_for		varchar	I'm not sure what this means
-    time						int			When was the attempt made?												0
-    username				varchar	What was the exact text the user typed?         	0
-    username_clean	varchar What would this username be if sanitized?					0
+    ip							varchar		Where was the login attempt made from?
+    browser					varchar		What kind of web browser was used?
+    forwarded_for		varchar		I'm not sure what this means
+    attempt_date		timestamp	When was the attempt made?											0
+    username				varchar		What was the exact text the user typed?        	0
+    username_clean	varchar 	What would this username be if sanitized?				0
 
 This table needs a primary key.
 
-###		26.	moderator_cache			-Who is a moderator in which forum? (For display)
+###		26.	moderators					-Who is a moderator in which forum? (For display)
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table
     user_id		unsigned int	Foreign	References the users table
@@ -519,22 +522,22 @@ this be part of the base design.
     edit_user	unsigned int	Foreign	References the users table
 
 ####			Attributes:
-    poster_ip					varchar				The IP address where the post originated.
-    time							unsigned int	When was the post made?							  		0
+    poster_ip_addr		varchar				The IP address where the post originated.
+    post_date					timestamp			When was the post made?							  		0
     approved					boolean				Has the post been approved?         	 true
     reported					boolean				Has the post been reported?						false
     enable_lml				boolean				Does the user want to use markup?			 true
     enable_smilies		boolean				Does the user want to use smilies?		 true
     enable_magic_url	boolean				Does the user want automatic URLs?		 true
-    enable_sig				boolean				Display signature?                     true
+    enable_signature	boolean				Display signature?                     true
     username					varchar				Who posted this?
     subject						varchar				What are we talking about?
     text							text					What is being said?
     checksum					varchar				Verifies the post
     attachment				boolean				Are there attached files?							false
     postcount					boolean				Undocumented													 true
-    edit_time					unsigned int	When was this post edited?								0
-    edit_count				smallint(4)		How many times has the post been edited?	0
+    edit_date					timestamp			When was this post edited?								0
+    edit_tally				smallint(4)		How many times has the post been edited?	0
     edit_locked				boolean				Has the post been blocked from editing?		1
 
 icon_id has been excluded because the icons table has been deprecated.
@@ -544,17 +547,17 @@ The following are required fields:
 *	forum_id
 *	poster_id
 
-###		31.	privmsgs					-Private messages text
+###		31.	private_messages					-Private messages text
 ####			Keys:
-    msg_id			unsigned int	Primary	Key                         auto_increment
+    message_id	unsigned int	Primary	Key                         auto_increment
     root_level	unsigned int	Foreign	The initial message. References privmsgs
     author_id		unsigned int	Foreign	References the users table.
 
 icon_id has been excluded because the icons table has been deprecated.
 
 ####			Attributes:
-    author_ip					varchar				IP address where the message originated.
-    time							unsigned int	When was the message created?							0
+    author_ip_addr		varchar				IP address where the message originated.
+    message_date			timestamp			When was the message created?							0
     enable_lml				boolean				Is this message raw text or lml?			 true
     enable_smilies		boolean				Should emoticons be pictures?					 true
     enable_magic_url	boolean				Automatically convert URLs to links?	 true
@@ -563,33 +566,33 @@ icon_id has been excluded because the icons table has been deprecated.
     text							text					What is the message?
     edit_reason				varchar				Why was the message edited?
     attachment				boolean				Does this message have an attachment?	false
-    edit_time					unsigned int	When was the message edited?							0
-    edit_count        smallint(4)   How many edits have there been?           0
-    to_address				text					Colon separated list of recipients.
+    edit_date					timestamp			When was the message edited?							0
+    edit_tally				smallint(4)   How many edits have there been?           0
+    to_addr						text					Colon separated list of recipients.
 
 author_ip is a required field
 
 edit_user has been deprecated because only the sender should be allowed to edit
 a private message.
 
-The to_address field is interesting, and I think I sort of understand why it is.
+The to_addr field is interesting, and I think I sort of understand why it is.
 If there was an associative entity and a table representing it, it would be
 easier for a malicious user to monitor traffic within the system. This way it's
 a little easier to prevent that from happening. However, I think it might be
 best to make associative entity and find a way to protect it.
 
-###		32.	privmsgs_folders	-Custom private messages folders (for each user)
+###		32.	message_folders			-Custom private messages folders (for each user)
 See privmsgs_rules
 
-###		33.	privmsgs_rules		-Message rules, e.g. "if * then move * into folders
+###		33.	message_rules				-Message rules, e.g. "if * then move * into folders
 This table is poorly documented. For this reason, folders will not be a part of
 base implementation in v0.1. They will be a high priority addition in the
 future. This means that the privmsgs_folders table will also not be a required
 table for v0.1.
 
-###		34.	privmsgs_to				-Information (sender, new...) on private messages
+###		34.	sent_messages				-Information (sender, new...) on private messages
 ####			Keys:
-    msg_id				unsigned int	Primary	Key										auto_increment
+    message_id		unsigned int	Foreign	References the private_messages table
     recipient_id	unsigned int	Foreign	Who is the recepient?
     author_id			unsigned int	Foreign	Who is the sender?
 
@@ -622,7 +625,7 @@ version of the SFIM standard.
 ####			Attributes:
     user_notify	boolean				Has the user been notified?					false
     closed			boolean				Has the report been closed?					false
-    time				unsigned int	When was the report filed?					0
+    report_date	timestamp			When was the report filed?					0
     text				text					What text does the report display?
 
 The following fields are required:
@@ -630,7 +633,7 @@ The following fields are required:
 * post_id
 * user_id
 
-###		38. reports_reasons		-Reasons for reported posts and disapprovals
+###		38. report_reasons		-Reasons for reported posts and disapprovals
 ####			Keys:
     reason_id	unsigned int	Primary	Key
 
@@ -649,14 +652,14 @@ stored in the database.
     user_id			unsigned int	Foreign	References to the users table
 
 ####			Attributes:
-    last_visit	unsigned int	When was the last time the user visited?		0
-    start				unsigned int	When did the user log in.										0
-    ip					varchar				Where is the user?
-    browser			varchar				What kind of browser is the user using?
-    page				varchar				What page is the user currently viewing?
-    viewonline	boolean				I have no idea what this field does					true
-    autologin		boolean				Should the user be logged in automatically?	false
-    admin				boolean				Is this user an administrator?							false
+    last_visit_date	timestamp			When was the last time the user visited?		0
+    start						unsigned int	When did the user log in.										0
+    ip							varchar				Where is the user?
+    browser					varchar				What kind of browser is the user using?
+    page						varchar				What page is the user currently viewing?
+    viewonline			boolean				I have no idea what this field does			 true
+    autologin				boolean				Does the user want to be remembered?		false
+    admin						boolean				Is this user an administrator?					false
 
 user_id is a required field.
 
@@ -681,8 +684,8 @@ the URI passed to the logic controller.
     user_id	unsigned int	Foreign	References the users table.
 
 ####			Attributes:
-    last_ip			varchar				Where was the last place the user logged in?
-    last_login	unsigned int	When was the last time the user logged in?		0
+    last_ip					varchar				Where was the last place the user logged in?
+    last_login_date	timestamp			When was the last time the user logged in?	0
 
 user_id is a required field.
 
@@ -690,7 +693,7 @@ phpBB uses an MD5 hash, which is not secure. Also, because of collisions, the
 method was using both key_id and user_id as a primary key. SHA-2 is known for
 preventing collisions, so this should no longer be needed.
 
-###		42.	sitelist					-Trusted websites for downloads
+###		42.	trusted_sites			-Trusted websites for downloads
 ####			Keys:
     site_id	unsigned int	Primary	Key	auto_increment
 
@@ -718,24 +721,24 @@ SFIM standard.
 icon_id has been excluded as the icons table has been deprecated.
 
 ####			Attributes:
-    attachment		boolean				Do any posts have attachments?false
-    pen_approval	boolean				Is this topic awaiting approval?					 true
-    reported			boolean				Has this topic been reports?							false
-    title					varchar				What is the title of this topic?
-    time					unsigned int	When was the topic posted?							   		0
-    time_limit		unsigned int	How long will this topic be sticky?				  	0
-    views					unsigned int	How many times has this topic been viewed?	  0
-    replies				unsigned int	How many approved replies have there been?    0
-    replies_real	unsigned int	How many replies of any kind are there?			  0
-    status				tinyint				UNLOCKED, LOCKED, MOVED                       0
-    type					tinyint				NORMAL, STICKY, ANNOUNCE, GLOBAL						  0
+    attachment				boolean				Do any posts have attachments?false
+    pen_approval			boolean				Is this topic awaiting approval?			 true
+    reported					boolean				Has this topic been reports?					false
+    title							varchar				What is the title of this topic?
+    creation_date			timestamp			When was the topic posted?							  0
+    unstick_date			date					When will this topic stop being sticky?
+    view_tally				unsigned int	How many views have happend?							0
+    reply_total				unsigned int	How many replies have been approved?			0
+    reply_real_total	unsigned int	How many replies of any kind are there?		0
+    status						tinyint				UNLOCKED, LOCKED, MOVED										0
+    type							tinyint				NORMAL, STICKY, ANNOUNCE, GLOBAL					0
 
 The following are required fields:
 * forum_id
 * poster
 * first_post_id
 
-###		46.	topics_posted			-Who posted in which topic (used for the small dots)
+###		46.	topic_postings		-Who posted in which topic (used for the small dots)
 ####			Keys:
 		user_id		unsigned int	Foreign References the users table.
 		topic_id	unsigned int	Foreign References the topics table.
@@ -748,19 +751,19 @@ user_id and topic_id together make up the primary key.
 
 The attribute, topic_posted does not make sense to me.
 
-###		47.	topics_track			-Unread post information is stored here
+###		47.	tracked_topics		-Unread post information is stored here
 ####			Keys:
 		user_id 	unsigned int	Foreign References the users table.
 		topic_id	unsigned int	Foreign	References the topics table.
 
 ####			Attributes:
-		mark_time	unsigned int	Last visit to this topic	0
+		mark_time	timestamp	Last visit to this topic	0
 
 Because this is an associative entity, in order to quaruntee unique entities,
 user_id and topic_id together make up the primary key. The forum_id key has been
 removed as this information will be stored in the topic entity.
 
-###		48.	topics_watch			-Who wants notifications about changes to what topic
+###		48.	watched_topics		-Who wants notifications about changes to what topic
 ####			Keys:
 		topic_id	unsigned int	Foreign References the topics table.
 		user_id		unsigned int	Foreign	References the users table.
@@ -771,7 +774,7 @@ removed as this information will be stored in the topic entity.
 Because this is an associative entity, in order to quaruntee unique entities,
 user_id and topic_id together make up the primary key.
 
-###		49.	user_groups				-Groups of users.
+###		49.	memberships				-Groups of users.
 This table describes the membership of users in groups. This is a poor table
 name as it is not clear what it is that it represents. This will be renamed
 before v0.1
@@ -796,33 +799,33 @@ primary key in order to gauruntee uniqueness.
 ####			Attributes:
 		user_type					tinyint				normal, inactive, bot, founder.						1
 		permissions				text					A cached copy of the computed permissions.
-		ip								varchar				The IP address the user registered from.
-		regdate						unsigned int	When did the user sign up?								0
+		ip_addr						varchar				The IP address the user registered from.
+		registration_date	date					When did the user sign up?
 		password					varchar				SHA-2 hashed value of user password + salt.
-		passchange				unsigned int	When did the user set their password?			0
+		passchang_date		date					When did the user set their password?			0
 		birthday					varchar				dd-mm-yyyy
-		last_visit				unsigned int	When was the last time the user visited?	0
-		lastmark					unsigned int	Last time the user marked forums read			0
-		lastpost_time			unsigned int	The time of the latest post by the user		0
+		last_visit_date		timestamp			When was the last time the user visited?	0
+		lastmark					timestamp			Last time the user marked forums read			0
+		lastpost_time			timestamp			The time of the latest post by the user		0
 		lastpage					varchar				The URL of the last page visited by the user
 		last_confirm_key	varchar				Code used for security reasons
-		last_search_time	unsigned int	The last time user performed a search			0
+		last_search_time	timestamp			The last time user performed a search			0
 		warnings					tinyint				The number of warnings the user has.
-		last_warning			unsigned int	The last time the user was warned.				0
+		last_warning			timestamp			The last time the user was warned.				0
 		login_attempts		tinyint				Failed login attempts. Resets on success	0
 		inactive_reason		tinyint(4)		The reason the user is inactive.					0
-		inactive_time			unsigned int	When the user's account became inactive		0
+		inactive_date			timestamp			When the user's account became inactive		0
 		posts							unsigned int	Amount of posts the user has posts				0
-		lang							varchar				The user's selected language
+		language					varchar				The user's selected language
 		timezone					decimal				The user's offest from UTC						 0.00
 		dst								boolean				Is the user on Daylight Savings Time	false
 		dateformat				varchar				The user's desired date format.	%d %m	%y %2
-		new_privmsg				tinyint				The number of new private messages.
-		unread_privmsg		tinyint				The number of unread private messages.
-		last_privmsg			unsigned int	The last time the user sent a message			0
+		new_message				tinyint				The number of new private messages.
+		unread_message		tinyint				The number of unread private messages.
+		last_message			date					The last time the user sent a message			0
 		message_rules			boolean				Flag indicating if the user has rules	false
 		full_folder				int						What to do when a folder is full				 -3
-		emailtime					unsigned int	The time the user sent an email						0
+		emailtime					timestamp			The time the user sent an email						0
 		topic_show_days		unsigned int	The maximum age of a topic to be shown		0
 		topic_sortby_type	tinyint				author, replies, time, subject, views.		2
 		topic_sortby_asc	boolean				Sort ascending or descending.					false
@@ -880,7 +883,7 @@ The styling storage in the database design has been deprecated. For this reason
 the style attribute of this table is no longer useful.
 
 The color field has been left out. I think that should be handled by an external
-config file.
+configuration file.
 
 The user_options field has been deprecated because it makes no sense, even when
 it is documented.
@@ -891,6 +894,19 @@ in the filesystem for this release.
 The signature bbcode fields have been deprecated because that should be handled
 by the logic controllers, as discussed in other locations in this document.
 
+regdate should be automatically created upon the creation of this table, and
+will be a required field.
+
+I'm not sure that the last private message time needs to be stored as this
+information should be stored in the private messages table. However, this table
+should also be protected from malicious users learning things that they should
+not. For this reason I am leaving that field for now.
+
+I'm much more positive that the last post time field should be removed. However,
+this branch is only for fixing style and data storage types. I will create an
+issue on github describing the problem of having unneeded things stored in silly
+tables.
+
 The following are required fields:
 * user_birthday
 * user_email_hash
@@ -898,13 +914,13 @@ The following are required fields:
 
 ###		51.	warnings					-Warnings given to users
 ####			Keys:
-		warning_id	unsigned int	Primary Key													auto_increment
+		warning_id	unsigned int	Primary Key
 		user_id			unsigned int	Foreign	References the users table.
 		post_id			unsigned int	Foreign	References the posts table.
 		log_id			unsigned int	Foreign References the logs table.
 
 ####			Attributes:
-		warning_time	unsigned int	When was the warning given?	0
+		warning_date	timestamp	When was the warning given?
 
 ###		52.	words							-Censored words
 ####			Keys:
@@ -916,5 +932,5 @@ The following are required fields:
 
 Users are encouraged to use regular expressions to implement word bans.
 
-###		53. zebra							-Friends or foes
+###		53. zebras						-Friends or foes
 This table doesn't even begin to make sense.
