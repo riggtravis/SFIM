@@ -58,10 +58,10 @@ user rights that is not a very clear and concise method of knowing which users
 have what permissions.
 
 ####			Keys:
-    group_id		unsigned int	Primary	Key
-    group_name	varchar				Unique	Name of the group
-    role_id			unsigned int	Foreign	Reference to acl_roles table
-    user_id			unsigned int	Foreign	Reference to acl_people table
+    acl_group_id		unsigned int	Primary	Key
+    acl_group_name	varchar				Unique	Name of the group
+    role_id					unsigned int	Foreign	Reference the acl_roles table
+    user_id					unsigned int	Foreign	Reference the people table
 
 ####			Attributes
     description	text					What is this group for?
@@ -80,7 +80,7 @@ have what permissions.
 Two unused attributes from this table were ignored.
 
 ####			Keys:
-role_id	unsigned int	Primary	Key
+		role_id	unsigned int	Primary	Key
 
 ####			Attributes:
     role_name					varchar	Title of the role
@@ -132,7 +132,7 @@ way.
 ###		6.	attachments					-Information on attachments
 ####			Keys:
     attach_id					unsigned int	Primary	Key		  							auto_increment
-    post_message_id		unsigned int	Foreign References posts table
+    post_message_id		unsigned int	Foreign Refers posts or message table
     topic_id					unsigned int	Foreign	References topics table
     poster_id					unsigned int	Foreign	References people table
     physical_filename	varchar				Unique	name of the file stored physically
@@ -209,7 +209,7 @@ phpBB really doesn't make much use of this table itself.
 ####			Attributes:
     order_ id	unsigned int	Keeps all bookmarked topics in order.
 
-All keys and attributes of this table must be set.
+topic_id and user_id combine to create the primary key for this table.
 
 I'm not clear on what this order_id does. Also this table does not have a
 primary key. I believe that phpBB uses the combination of topic_id and user_id
@@ -275,7 +275,7 @@ expressions for this table.
 This table is used to help the forum system understand what to do with files.
 
 ####			Keys:
-    group_id	unsigned int	Primary	Key	auto_increment
+    extension_group_id	unsigned int	Primary	Key	auto_increment
 
 ####			Attributes:
     group_name			varchar				What is the name of this group of associations
@@ -294,11 +294,11 @@ good practice.
 
 ###		16.	extensions					-Extensions (.xxx) allowed for attachments.
 ####			Keys:
-    extenstion_id	unsigned int	Primary	Key
-    group_id			unsigned int	Foreign	References the extension_groups
+    extenstion_id				unsigned int	Primary	Key
+    extension_group_id	unsigned int	Foreign	References the extension_groups
 
 ####			Attributes:
-extension	varchar	What is the extension that you are trying to describe?
+		extension	varchar	What is the extension that you are trying to describe?
 
 ###		17.	forums							-Forums (Name, description, rules...)
 ####			Keys:
@@ -380,17 +380,16 @@ are allowed to use a forum is better than having a password for a forum.
 ####			Keys:
     session_id	binary char		Foreign	References the sessions table.
     forum_id		unsigned int	Foreign	References the forums table.
-    user_id			unsigned int	Foreign	References the people table.
 
 ####			Attributes:
 This table does not have a primary key field but instead uses the combination of
-session_id, forum_id, and user_id. Also, the user_id field does not need to be
+session_id and forum_id. Also, the user_id field does not need to be
 stored in this table. The reason for this is that the session information drawn
 from the sessions table will already contain the user information. Implementers
 of SFIM who want to do things this way for speed purposes are encouraged to, but
 this won't be part of future SFIM models because it is less clear.
 
-###		19. forums_visits				-Unread post information is stored here.
+###		19. forum_visits				-Unread post information is stored here.
 ####			Keys:
     user_id		unsigned int	Foreign	References the people table.
     forum_id	unsigned int	Foreign	References the forums table.
@@ -450,7 +449,7 @@ acted very much as if it was interacting with a database. For this reason I am
 leaving this table in tact with plans to research modifying it.
 
 ####			Keys:
-    lang_id	tinyint(4)	Primary	Key
+    language_id	tinyint(4)	Primary	Key
 
 ####			Attributes:
     iso						varchar	ISO code that identifies the language
@@ -462,10 +461,10 @@ leaving this table in tact with plans to research modifying it.
 ###		24.	logs								-Administration/Moderation/Error logs
 ####			Keys:
     log_id			unsigned int	Primary	Key											    auto_increment
-    user_id			unsigned int	Foreign	References the people table
+    user_id			unsigned int	Foreign	Who is being reported?
     forum_id		unsigned int	Foreign	References the forums table
     topic_id		unsigned int	Foreign	References the topics table
-    reportee_id	unsigned int	Foreign	References the people table
+    reportee_id	unsigned int	Foreign	Who did the reporting?
 
 ####			Attributes:
     log_type  tinyint(2)    administrative, moderative, or error log?         0
@@ -476,17 +475,17 @@ leaving this table in tact with plans to research modifying it.
 
 ###		25.	login_attempts			-Information about attempted logins
 ####			Keys:
-    user_id	unsigned int	Foreign	References the people table
+    user_id				unsigned int	Foreign	References the people table
+		attempt_date	timestamp							When was the attempt made?
 
 #### 			Attributes:
     ip							varchar		Where was the login attempt made from?
     browser					varchar		What kind of web browser was used?
     forwarded_for		varchar		I'm not sure what this means
-    attempt_date		timestamp	When was the attempt made?											0
     username				varchar		What was the exact text the user typed?        	0
     username_clean	varchar 	What would this username be if sanitized?				0
 
-This table needs a primary key.
+The combination of user_id and attempt_date create the primary key.
 
 ###		26.	moderators					-Who is a moderator in which forum? (For display)
 ####			Keys:
@@ -495,15 +494,11 @@ This table needs a primary key.
     group_id	unsigned int	Foreign	References the groups table
 
 ####			Attributes:
-    username					varchar	Username of a user
-    group_name				varchar	Name of a group
     display_on_index	boolean	Should this information be stored on the index?	1
 
-Username and group_name could probably both be gathered by querying user_id and
-group_id respectively.
+Username and group_name are gathered by querying user_id and group_id.
 
-This table currently has no primary key or guaruntee of unique entries. This
-will be modified in future updates.
+The combination of forum_id, user_id, and group_id create the primary key.
 
 ###		27. modules							-Configuration of acp, mcp, and ucp modules
 This table is extremely poorly documented, and does not have very understandable
@@ -521,8 +516,8 @@ this be part of the base design.
     post_id		unsigned int	Primary Key													auto_increment
     topic_id	unsigned int	Foreign	References the topics table
     forum_id	unsigned int	Foreign	References the forums table
-    poster_id	unsigned int	Foreign	References the people table
-    edit_user	unsigned int	Foreign	References the people table
+    poster_id	unsigned int	Foreign	Who posted this topic?
+    edit_user	unsigned int	Foreign	Who renamed this topic?
 
 ####			Attributes:
     poster_ip_addr		varchar				The IP address where the post originated.
@@ -553,7 +548,7 @@ The following are required fields:
 ###		31.	private_messages					-Private messages text
 ####			Keys:
     message_id	unsigned int	Primary	Key                         auto_increment
-    root_level	unsigned int	Foreign	The initial message. References privmsgs
+    root_level	unsigned int	Foreign	Initial message. Refers private_messages
     author_id		unsigned int	Foreign	References the people table.
 
 icon_id has been excluded because the icons table has been deprecated.
@@ -608,6 +603,8 @@ table for v0.1.
     forwarded	boolean	Has the user sent this message on?		false
 
 folder_id: see privmsgs_rules.
+
+message_id, author_id, and recipient_id combine to comprise the primary key.
 
 ###		35.	profile_fields		-Custom profile fields (name, number characters...)
 This table is poorly documented. It will be left out of v0.1, and possibly SFIM
@@ -740,6 +737,10 @@ The following are required fields:
 * forum_id
 * poster
 * first_post_id
+
+Interestingly the first_post_id is not indicative of a multiple relationship
+like it usually is. I actually think that this is also indicative that we can
+normalize it out of our model in some way.
 
 ###		46.	topic_postings		-Who posted in which topic (used for the small dots)
 ####			Keys:
