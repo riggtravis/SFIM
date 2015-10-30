@@ -58,7 +58,7 @@ have what permissions.
     group_id		unsigned int	Primary	Key
     group_name	varchar				Unique	Name of the group
     role_id			unsigned int	Foreign	Reference to acl_roles table
-    user_id			unsigned int	Foreign	Reference to acl_users table
+    user_id			unsigned int	Foreign	Reference to acl_people table
 
 ####			Attributes
     description	text					What is this group for?
@@ -109,7 +109,7 @@ or not in order to do a specified task.
 
 ###		5.	acl_people					-Permissions assigned
 ####			Keys:
-    user_id					unsigned int	Foreign	References users table
+    user_id					unsigned int	Foreign	References people table
     forum_id				unsigned int	Foreign	References forums table
     auth_option_id	unsigned int	Foreign	References acl_options
 
@@ -131,7 +131,7 @@ way.
     attach_id					unsigned int	Primary	Key		  							auto_increment
     post_message_id		unsigned int	Foreign References posts table
     topic_id					unsigned int	Foreign	References topics table
-    poster_id					unsigned int	Foreign	References users table
+    poster_id					unsigned int	Foreign	References people table
     physical_filename	varchar				Unique	name of the file stored physically
 
 post_msg_id, topic_id, and poster_id are all required fields.
@@ -161,20 +161,20 @@ to the table is created.
 
 ###		7.	bans							-Banned users, ip addresses, or emails
 This table doesn't make much sense. I think the best way to do this would be to
-separate this table into three different tables. the banned_users_list, the
-banned_ip_addresses_list, and the banned_emails_list. However, for v0.1 of SFIM
-I would like to keep as close as possible to the implementation used by phpBB so
-that the DNA of SFIM is clearer. It must be kept in mind that at this early
-stage SFIM is a fork of phpBB's underlying schema.
+separate this table into three different tables. the user_bans, the
+ip_bans, and the email_bans. However, for v0.1 of SFIM I would like to keep as 
+close as possible to the implementation used by phpBB so that the DNA of SFIM is
+clearer. It must be kept in mind that at this early stage SFIM is a fork of
+phpBB's underlying schema.
 
 All of that said, fields in this banlist table that do not make sense will be
 removed. An example of this is ban_reason and ban_give_reason. Having different
 reasons than the reasons given to a user or a community is rude, and I would
-prefer to esnure that users on a SFIM based forum have an enjoyable experience.
+prefer to ensure that people on a SFIM based forum have an enjoyable experience.
 
 ####			Keys:
     ban_id			unsigned int	Primary	Key
-    user_id			unsigned int	Foreign	References users table
+    user_id			unsigned int	Foreign	References people table
     ip_addr			varchar				Unique	Banned IP address
     email_addr	varchar				Unique	The email address of someone being banned
 
@@ -201,7 +201,7 @@ phpBB really doesn't make much use of this table itself.
 ###		9.	bookmarks						-Bookmarked topics
 ####			Keys:
     topic_id	unsigned int	Foreign	References topics table
-    user_id		unsigned int	Foreign	References users table
+    user_id		unsigned int	Foreign	References people table
 
 ####			Attributes:
     order_ id	unsigned int	Keeps all bookmarked topics in order.
@@ -221,7 +221,7 @@ conversation. A single message cannot exist without a topic.
 ####			Attributes:
     bot_active	boolean				Is the bot in service?							true
     bot_name		varchar				What is the name of the bot?
-    user_id			unsigned int	References users table
+    user_id			unsigned int	References people table
     agent				varchar				Undocumented
     ip_addr			varchar				What is the ip address of the bot?
 
@@ -259,7 +259,7 @@ expressions for this table.
 ###		14. drafts							-Drafts of future posts/private messages.
 ####			Keys:
     draft_id	unsigned int	Primary	Key														auto_increment
-    user_id		unsigned int	Foreign	Reference to the users table.
+    user_id		unsigned int	Foreign	Reference to the people table.
     topic_id	unsigned int	Foreign	Reference to the topics table.
     forum_id	unsigned int	Foreign	Reference to the forums table.
 
@@ -279,7 +279,7 @@ This table is used to help the forum system understand what to do with files.
     cat_id					tinyint(2)		I think this has to do with categories			0
     allow_group			boolean				Is this group allowed to be posted?			false
     download_mode		boolean				Should this file be viewed immediately?	 true
-    upload_icon			varchar				Icon to be shown when users are making uploads.
+    upload_icon			varchar				Icon to be shown when users are making uploads
     max_file_size		unsigned int	What's the biggest a file can be in bytes?	0
     allowed_forums	text					Where is this file type allowed?
     allow_in_pm			boolean				Is this sendable in private messages?  	false
@@ -370,14 +370,14 @@ The password field of this forum table isn't the best practice for having
 private forums. A better method would be to use a method for having an invite
 only forum. Examples of how to do this are to ban all IP address and then add
 invited emails to the whitelist. Another way to do it is to perform a hashed
-handshake for users attempting to use the forum. Either way, a list of users who
+handshake for people attempting to use the forum. Either way, a list of people who
 are allowed to use a forum is better than having a password for a forum.
 
 ###		18.	current_forum_users	-Store who is logged into protected forums
 ####			Keys:
     session_id	binary char		Foreign	References the sessions table.
     forum_id		unsigned int	Foreign	References the forums table.
-    user_id			unsigned int	Foreign	References the users table.
+    user_id			unsigned int	Foreign	References the people table.
 
 ####			Attributes:
 This table does not have a primary key field but instead uses the combination of
@@ -389,7 +389,7 @@ this won't be part of future SFIM models because it is less clear.
 
 ###		19. forums_visits				-Unread post information is stored here.
 ####			Keys:
-    user_id		unsigned int	Foreign	References the users table.
+    user_id		unsigned int	Foreign	References the people table.
     forum_id	unsigned int	Foreign	References the forums table.
 
 ####			Attributes:
@@ -401,7 +401,7 @@ required fields.
 ###		20.	watched_forums			-Subscribed forums
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table.
-    user_id		unsigned int	Foreign	References the users table.
+    user_id		unsigned int	Foreign	References the people table.
 
 ####			Attributes:
     notify_status	boolean	Does the user need to be notified of recent changes?
@@ -418,7 +418,7 @@ held in it is unique. This will need to be remedied in the future.
     founder_manage	boolean				Is the founder responsible for this group?	0
     name						varchar				What is the name of this group?
     description			text					What is this group for and why does it exist?
-    display					boolean				Can users see this group?								false
+    display					boolean				Can people see this group?							false
     avatar					varchar				What is the image for this group?
     avatar_type			tinyint(4)		What is the file type for the group avatar?	0
     avatar_width		tinyint(4)		How wide is the avatar image?								0
@@ -459,10 +459,10 @@ leaving this table in tact with plans to research modifying it.
 ###		24.	logs								-Administration/Moderation/Error logs
 ####			Keys:
     log_id			unsigned int	Primary	Key											    auto_increment
-    user_id			unsigned int	Foreign	References the users table
+    user_id			unsigned int	Foreign	References the people table
     forum_id		unsigned int	Foreign	References the forums table
     topic_id		unsigned int	Foreign	References the topics table
-    reportee_id	unsigned int	Foreign	References the users table
+    reportee_id	unsigned int	Foreign	References the people table
 
 ####			Attributes:
     log_type  tinyint(2)    administrative, moderative, or error log?         0
@@ -473,7 +473,7 @@ leaving this table in tact with plans to research modifying it.
 
 ###		25.	login_attempts			-Information about attempted logins
 ####			Keys:
-    user_id	unsigned int	Foreign	References the users table
+    user_id	unsigned int	Foreign	References the people table
 
 #### 			Attributes:
     ip							varchar		Where was the login attempt made from?
@@ -488,7 +488,7 @@ This table needs a primary key.
 ###		26.	moderators					-Who is a moderator in which forum? (For display)
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table
-    user_id		unsigned int	Foreign	References the users table
+    user_id		unsigned int	Foreign	References the people table
     group_id	unsigned int	Foreign	References the groups table
 
 ####			Attributes:
@@ -518,8 +518,8 @@ this be part of the base design.
     post_id		unsigned int	Primary Key													auto_increment
     topic_id	unsigned int	Foreign	References the topics table
     forum_id	unsigned int	Foreign	References the forums table
-    poster_id	unsigned int	Foreign	References the users table
-    edit_user	unsigned int	Foreign	References the users table
+    poster_id	unsigned int	Foreign	References the people table
+    edit_user	unsigned int	Foreign	References the people table
 
 ####			Attributes:
     poster_ip_addr		varchar				The IP address where the post originated.
@@ -551,7 +551,7 @@ The following are required fields:
 ####			Keys:
     message_id	unsigned int	Primary	Key                         auto_increment
     root_level	unsigned int	Foreign	The initial message. References privmsgs
-    author_id		unsigned int	Foreign	References the users table.
+    author_id		unsigned int	Foreign	References the people table.
 
 icon_id has been excluded because the icons table has been deprecated.
 
@@ -620,7 +620,7 @@ version of the SFIM standard.
     report_id	unsigned int	Primary	Key														auto_increment
     reason_id	unsigned int	Foreign References the reports_reasons table
     post_id		unsigned int	Foreign	References the posts table
-    user_id		unsigned int	Foreign References the users table
+    user_id		unsigned int	Foreign References the people table
 
 ####			Attributes:
     user_notify	boolean				Has the user been notified?					false
@@ -646,10 +646,10 @@ The following fields are required:
 This series of these tables don't make sense to me. Searches should not be
 stored in the database.
 
-###		40.	sessions					-Sessions to identify users browsing the forum
+###		40.	sessions					-Sessions to identify people browsing the forum
 ####			Keys:
     session_id	unsigned int	Primary	Key
-    user_id			unsigned int	Foreign	References to the users table
+    user_id			unsigned int	Foreign	References to the people table
 
 ####			Attributes:
     last_visit_date	timestamp			When was the last time the user visited?		0
@@ -681,7 +681,7 @@ the URI passed to the logic controller.
 ###		41.	session_keys			-Autologin feature
 ####			Keys:
     key_id	char					Primary	Key													SHA-2 hash
-    user_id	unsigned int	Foreign	References the users table.
+    user_id	unsigned int	Foreign	References the people table.
 
 ####			Attributes:
     last_ip					varchar				Where was the last place the user logged in?
@@ -715,7 +715,7 @@ SFIM standard.
 ####			Keys:
     topic_id			unsigned int	Primary	Key												auto_increment
     forum_id			unsigned int	Foreign	References the forums table.
-    poster				unsigned int	Foreign	References the users table.
+    poster				unsigned int	Foreign	References the people table.
     first_post_id	unsigned int	Foreign	References the posts table.
 
 icon_id has been excluded as the icons table has been deprecated.
@@ -740,7 +740,7 @@ The following are required fields:
 
 ###		46.	topic_postings		-Who posted in which topic (used for the small dots)
 ####			Keys:
-		user_id		unsigned int	Foreign References the users table.
+		user_id		unsigned int	Foreign References the people table.
 		topic_id	unsigned int	Foreign References the topics table.
 
 ####			Attributes:
@@ -753,7 +753,7 @@ The attribute, topic_posted does not make sense to me.
 
 ###		47.	tracked_topics		-Unread post information is stored here
 ####			Keys:
-		user_id 	unsigned int	Foreign References the users table.
+		user_id 	unsigned int	Foreign References the people table.
 		topic_id	unsigned int	Foreign	References the topics table.
 
 ####			Attributes:
@@ -766,7 +766,7 @@ removed as this information will be stored in the topic entity.
 ###		48.	watched_topics		-Who wants notifications about changes to what topic
 ####			Keys:
 		topic_id	unsigned int	Foreign References the topics table.
-		user_id		unsigned int	Foreign	References the users table.
+		user_id		unsigned int	Foreign	References the people table.
 
 ####			Attributes:
 		notify_status	boolean	Does the user need to be notified of new posts?	false
@@ -774,14 +774,14 @@ removed as this information will be stored in the topic entity.
 Because this is an associative entity, in order to quaruntee unique entities,
 user_id and topic_id together make up the primary key.
 
-###		49.	memberships				-Groups of users.
-This table describes the membership of users in groups. This is a poor table
+###		49.	memberships				-Groups of people.
+This table describes the membership of people in groups. This is a poor table
 name as it is not clear what it is that it represents. This will be renamed
 before v0.1
 
 ####			Keys:
 		group_id	unsigned int	Foreign References the groups table.
-		user_id		unsigned int	Foreign	References the users table.
+		user_id		unsigned int	Foreign	References the people table.
 
 ####			Attributes:
 		group_leader	boolean	Is this user a leader of this group?
@@ -790,7 +790,7 @@ before v0.1
 As this is an associative entity, group_id and user_id together make the
 primary key in order to gauruntee uniqueness.
 
-###		50.	people							-Registered users.
+###		50.	people							-Registered people.
 ####			Keys:
 		user_id					unsigned int	Primary	Key											auto_increment
 		username				varchar				Unique	How the user is known in the community
@@ -873,7 +873,7 @@ with storing the hash of the email address to make sure that the email is unique
 is that the email address essentially has to be stored already in order for the
 hash to even be useful.
 
-last_search_time and emailtime is used by the system to keep users from flooding
+last_search_time and emailtime is used by the system to keep people from flooding
 the server with searches.
 
 For formatting the date. For more information, please see
@@ -899,7 +899,7 @@ will be a required field.
 
 I'm not sure that the last private message time needs to be stored as this
 information should be stored in the private messages table. However, this table
-should also be protected from malicious users learning things that they should
+should also be protected from malicious people learning things that they should
 not. For this reason I am leaving that field for now.
 
 I'm much more positive that the last post time field should be removed. However,
@@ -912,10 +912,10 @@ The following are required fields:
 * user_email_hash
 * user_type
 
-###		51.	warnings					-Warnings given to users
+###		51.	warnings					-Warnings given to people
 ####			Keys:
 		warning_id	unsigned int	Primary Key
-		user_id			unsigned int	Foreign	References the users table.
+		user_id			unsigned int	Foreign	References the people table.
 		post_id			unsigned int	Foreign	References the posts table.
 		log_id			unsigned int	Foreign References the logs table.
 
