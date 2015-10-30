@@ -790,7 +790,7 @@ before v0.1
 As this is an associative entity, group_id and user_id together make the
 primary key in order to gauruntee uniqueness.
 
-###		50.	users							-Registered users.
+###		50.	people							-Registered users.
 ####			Keys:
 		user_id					unsigned int	Primary	Key											auto_increment
 		username				varchar				Unique	How the user is known in the community
