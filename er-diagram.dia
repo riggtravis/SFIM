@@ -1,26 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	© (C) Copyright 2015 Travis Rigg
-
-	© Copyright phpBB Limited 2003-2014
-
-	This project is distributed under the terms of the GNU General Public License v2
-
-	This file is part of SFIM.
-
-	    SFIM is free documentation: you can redistribute it and/or modify
-	    it under the terms of the GNU General Public License as published by
-	    the Free Software Foundation, either version 2 of the License, or
-	    (at your option) any later version.
-
-	    SFIM is distributed in the hope that it will be useful,
-	    but WITHOUT ANY WARRANTY; without even the implied warranty of
-	    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	    GNU General Public License for more details.
-
-	    You should have received a copy of the GNU General Public License
-	    along with SFIM.  If not, see <http://www.gnu.org/licenses/>.
--->
 <dia:diagram xmlns:dia="http://www.lysator.liu.se/~alla/dia/">
   <dia:diagramdata>
     <dia:attribute name="background">
@@ -508,13 +486,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O11">
       <dia:attribute name="obj_pos">
-        <dia:point val="15.1,18.15"/>
+        <dia:point val="36.2,28.45"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="15.05,18.1;18.09,20"/>
+        <dia:rectangle val="36.15,28.4;39.19,30.3"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="15.1,18.15"/>
+        <dia:point val="36.2,28.45"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="2.9399999999999999"/>
@@ -590,13 +568,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O13">
       <dia:attribute name="obj_pos">
-        <dia:point val="5.1,22.3"/>
+        <dia:point val="5.3,26.9"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="5.05,22.25;11.94,24.15"/>
+        <dia:rectangle val="5.25,26.85;12.14,28.75"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="5.1,22.3"/>
+        <dia:point val="5.3,26.9"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="6.7899999999999991"/>
@@ -672,13 +650,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O15">
       <dia:attribute name="obj_pos">
-        <dia:point val="20.05,22.25"/>
+        <dia:point val="19.5,26.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="20,22.2;27.66,24.1"/>
+        <dia:rectangle val="19.45,26.45;27.11,28.35"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="20.05,22.25"/>
+        <dia:point val="19.5,26.5"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="7.5600000000000005"/>
@@ -713,13 +691,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O16">
       <dia:attribute name="obj_pos">
-        <dia:point val="13.75,22.2"/>
+        <dia:point val="13.2,26.45"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="13.7,22.15;19.05,24.05"/>
+        <dia:rectangle val="13.15,26.4;18.5,28.3"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="13.75,22.2"/>
+        <dia:point val="13.2,26.45"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="5.25"/>
@@ -754,16 +732,16 @@
     </dia:object>
     <dia:object type="Standard - BezierLine" version="0" id="O17">
       <dia:attribute name="obj_pos">
-        <dia:point val="23.83,23.15"/>
+        <dia:point val="23.28,27.4"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="18.9987,23.05;20.05,23.2"/>
+        <dia:rectangle val="18.4487,27.3;19.5,27.45"/>
       </dia:attribute>
       <dia:attribute name="bez_points">
-        <dia:point val="23.83,23.15"/>
-        <dia:point val="23.4299,23.15"/>
-        <dia:point val="16.7751,23.1"/>
-        <dia:point val="16.375,23.1"/>
+        <dia:point val="23.28,27.4"/>
+        <dia:point val="22.8799,27.4"/>
+        <dia:point val="16.2251,27.35"/>
+        <dia:point val="15.825,27.35"/>
       </dia:attribute>
       <dia:attribute name="corner_types">
         <dia:enum val="0"/>
@@ -870,7 +848,7 @@
         <dia:point val="6.555,38.5"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="7.40555,38.45;9.20447,56.1"/>
+        <dia:rectangle val="7.40556,38.45;9.20448,56.1"/>
       </dia:attribute>
       <dia:attribute name="bez_points">
         <dia:point val="6.555,38.5"/>
@@ -1716,13 +1694,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O43">
       <dia:attribute name="obj_pos">
-        <dia:point val="25.1,13.1"/>
+        <dia:point val="3.1,30.2"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="25.05,13.05;31.555,14.95"/>
+        <dia:rectangle val="3.05,30.15;9.555,32.05"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="25.1,13.1"/>
+        <dia:point val="3.1,30.2"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="6.4049999999999994"/>
@@ -2869,13 +2847,13 @@
     </dia:object>
     <dia:object type="ER - Entity" version="0" id="O78">
       <dia:attribute name="obj_pos">
-        <dia:point val="30.075,24.05"/>
+        <dia:point val="28.825,27.25"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="30.025,24;34.99,25.9"/>
+        <dia:rectangle val="28.775,27.2;33.74,29.1"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="30.075,24.05"/>
+        <dia:point val="28.825,27.25"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="4.8650000000000002"/>
@@ -3392,7 +3370,7 @@
         <dia:point val="33.905,47.45"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="33.3196,36.784;73.9963,59.5674"/>
+        <dia:rectangle val="33.3196,36.784;73.996,59.5674"/>
       </dia:attribute>
       <dia:attribute name="bez_points">
         <dia:point val="33.905,47.45"/>
