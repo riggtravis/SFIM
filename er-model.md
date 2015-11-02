@@ -43,7 +43,7 @@ reference implementations that are part of the SFIM project will be available
 under the MIT license.
 
 ## Tables
-###		2.	acl_options					-List of possible permissions
+###		1.	acl_options					-List of possible permissions
 ####			Keys:
     auth_option_id:	unsigned int	Primary	Key
     auth_option:		varchar				Unique	Description of the permission
@@ -53,7 +53,7 @@ under the MIT license.
     is_local			boolean	Is this permission given on a by forum basis?
     founder_only	boolean	Is this permission given only to the community founder
 
-###		3.	acl_roles						-Permission roles
+###		2.	acl_roles						-Permission roles
 Two unused attributes from this table were ignored.
 
 ####			Keys:
@@ -63,7 +63,7 @@ Two unused attributes from this table were ignored.
     role_name					varchar	Title of the role
     role_description	text		What are the responsibilities of this role?
 
-###		4.	acl_assignments			-Permissions each role contains
+###		3.	acl_assignments			-Permissions each role contains
 ####			Keys:
     role_id					unsigned int	Foreign	References acl_roles table
     auth_option_id	unsigned int	Foreign	References acl_options table
@@ -87,7 +87,7 @@ I believe that auth_setting has to do with authentification based on its name. I
 think that what this has to do with is whether or not a user has to be logged in
 or not in order to do a specified task.
 
-###		5.	acl_people					-Permissions assigned
+###		4.	acl_people					-Permissions assigned
 ####			Keys:
     user_id					unsigned int	Foreign	References people table
     forum_id				unsigned int	Foreign	References forums table
@@ -106,7 +106,7 @@ This table does not have a primary key or any gauruntee that an entry is unique.
 This is not a good way of doing things, and should probably be modified in some
 way.
 
-###		6.	attachments					-Information on attachments
+###		5.	attachments					-Information on attachments
 ####			Keys:
     attach_id					unsigned int	Primary	Key		  							auto_increment
     post_message_id		unsigned int	Foreign Refers posts or message table
@@ -139,7 +139,7 @@ directly or to have a scheduled cleaning utility.
 Filetime is a required field and should be automatically created when an entry
 to the table is created.
 
-###		7.	bans							-Banned users, ip addresses, or emails
+###		6.	bans							-Banned users, ip addresses, or emails
 This table doesn't make much sense. I think the best way to do this would be to
 separate this table into three different tables. the user_bans, the
 ip_bans, and the email_bans. However, for v0.1 of SFIM I would like to keep as
@@ -169,7 +169,7 @@ One of the following must be set for the entry to be valid:
 *	ip_address
 *	email
 
-###		8.	bbcodes							-Custom BBCodes
+###		7.	bbcodes							-Custom BBCodes
 This table will likely not be a part of SFIM. It is currently a place holder in
 case this changes before the first release, which will be v0.1. The reason that
 it is likely to be abandoned is that it is not implementation agnostic, it
@@ -178,7 +178,7 @@ implementers or administrators of a SFIM distribution forum. The other factor in
 determining that this table doesn't have much place in the SFIM standard is that
 phpBB really doesn't make much use of this table itself.
 
-###		9.	bookmarks						-Bookmarked topics
+###		8.	bookmarks						-Bookmarked topics
 ####			Keys:
     topic_id	unsigned int	Foreign	References topics table
     user_id		unsigned int	Foreign	References people table
@@ -194,12 +194,12 @@ as a primary key. It is important to note that topics and posts are not the same
 things. A topic is a conversation. A post is a single message within a
 conversation. A single message cannot exist without a topic.
 
-###		11.	config							-Configuration information
+###		9.	config							-Configuration information
 The documentation for this table doesn't make sense to me. I think that I can
 get away with not having this table at all. I think configuration can be handled
 by a different method, such as flat files on the server.
 
-###		12.	confirmations				-Contains session information for confirm pages
+###		10.	confirmations				-Contains session information for confirm pages
 ####			Keys:
     confirm_id	char	Primary	Key									auto_increment
 
@@ -209,7 +209,7 @@ by a different method, such as flat files on the server.
     seed					int			The seed that should be used to initialize the RNG.	0
     attempts			int			The number of attempts that have been made.					0
 
-###		14. drafts							-Drafts of future posts/private messages.
+###		11. drafts							-Drafts of future posts/private messages.
 ####			Keys:
     draft_id	unsigned int	Primary	Key														auto_increment
     user_id		unsigned int	Foreign	Reference to the people table.
@@ -221,7 +221,7 @@ by a different method, such as flat files on the server.
     draft_subject	varchar		potential title for the draft.
     draft_message	text			potential body for the draft.
 
-###		15. extension_groups		-Extensions Groups, associate extensions with type
+###		12. extension_groups		-Extensions Groups, associate extensions with type
 This table is used to help the forum system understand what to do with files.
 
 ####			Keys:
@@ -242,7 +242,7 @@ associating what file types are allowed in what forums. That said I think that
 either way the allowed_forums field will get deleted because it's just not very
 good practice.
 
-###		16.	extensions					-Extensions (.xxx) allowed for attachments.
+###		13.	extensions					-Extensions (.xxx) allowed for attachments.
 ####			Keys:
     extenstion_id				unsigned int	Primary	Key
     extension_group_id	unsigned int	Foreign	References the extension_groups
@@ -250,7 +250,7 @@ good practice.
 ####			Attributes:
 		extension	varchar	What is the extension that you are trying to describe?
 
-###		17.	forums							-Forums (Name, description, rules...)
+###		14.	forums							-Forums (Name, description, rules...)
 ####			Keys:
     forum_id			unsigned int	Primary Key												auto_increment
     parent_id			unsigned int	Foreign	References forums table. Parent of forum
@@ -326,7 +326,7 @@ invited emails to the whitelist. Another way to do it is to perform a hashed
 handshake for people attempting to use the forum. Either way, a list of people who
 are allowed to use a forum is better than having a password for a forum.
 
-###		19. forum_visits				-Unread post information is stored here.
+###		15. forum_visits				-Unread post information is stored here.
 ####			Keys:
     user_id		unsigned int	Foreign	References the people table.
     forum_id	unsigned int	Foreign	References the forums table.
@@ -337,7 +337,7 @@ are allowed to use a forum is better than having a password for a forum.
 user_id and forum_id combine to create the primary key, and are therefor
 required fields.
 
-###		20.	watched_forums			-Subscribed forums
+###		16.	watched_forums			-Subscribed forums
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table.
     user_id		unsigned int	Foreign	References the people table.
@@ -348,11 +348,11 @@ required fields.
 This table does not have any primary key or a gauruntee that the information
 held in it is unique. This will need to be remedied in the future.
 
-###		22. icons								-Post icons
+###		17. icons								-Post icons
 I think that this table is purely about how the user interface will look. This
 should be handled by an external configuration file.
 
-###		23.	languages						-Installed languages
+###		18.	languages						-Installed languages
 I believe that this table can be managed by external configuration files. On the
 other hand, most forums I have interacted with have had a language menu that
 acted very much as if it was interacting with a database. For this reason I am
@@ -368,7 +368,7 @@ leaving this table in tact with plans to research modifying it.
     local_name		varchar	What is the language called in itself?
     author				varchar	Undocumented
 
-###		24.	logs								-Administration/Moderation/Error logs
+###		19.	logs								-Administration/Moderation/Error logs
 ####			Keys:
     log_id			unsigned int	Primary	Key											    auto_increment
     user_id			unsigned int	Foreign	Who is being reported?
@@ -383,7 +383,7 @@ leaving this table in tact with plans to research modifying it.
     operation	text					A description of what happened
     data			text					Log info
 
-###		25.	login_attempts			-Information about attempted logins
+###		20.	login_attempts			-Information about attempted logins
 ####			Keys:
     user_id				unsigned int	Foreign	References the people table
 		attempt_date	timestamp							When was the attempt made?
@@ -397,7 +397,7 @@ leaving this table in tact with plans to research modifying it.
 
 The combination of user_id and attempt_date create the primary key.
 
-###		26.	moderators					-Who is a moderator in which forum? (For display)
+###		21.	moderators					-Who is a moderator in which forum? (For display)
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table
     user_id		unsigned int	Foreign	References the people table
@@ -409,18 +409,18 @@ Username and group_name are gathered by querying user_id and group_id.
 
 The combination of forum_id, user_id, and group_id create the primary key.
 
-###		27. modules							-Configuration of acp, mcp, and ucp modules
+###		22. modules							-Configuration of acp, mcp, and ucp modules
 This table is extremely poorly documented, and does not have very understandable
 attribute names. It's possible that it's not needed. It might also be super
 important. From the phpBB documentation on modules, it's not clear what they are
 used for. I believe that SFIM will be fine without it.
 
-###		28.	poll_options				-Options text of all votes ("Yes", "No", ...)
+###		23.	poll_options				-Options text of all votes ("Yes", "No", ...)
 Because there are so many web services that allow users to create polls, I think
 it is best to plan on supporting these platforms in future updates that to have
 this be part of the base design.
 
-###		30.	posts               -Topics posts
+###		24.	posts               -Topics posts
 ####			Keys:
     post_id		unsigned int	Primary Key													auto_increment
     topic_id	unsigned int	Foreign	References the topics table
@@ -456,7 +456,7 @@ The following are required fields:
 *	forum_id
 *	poster_id
 
-###		31.	private_messages					-Private messages text
+###		25.	private_messages					-Private messages text
 ####			Keys:
     message_id	unsigned int	Primary	Key                         auto_increment
     root_level	unsigned int	Foreign	Initial message. Refers private_messages
@@ -490,16 +490,16 @@ easier for a malicious user to monitor traffic within the system. This way it's
 a little easier to prevent that from happening. However, I think it might be
 best to make associative entity and find a way to protect it.
 
-###		32.	message_folders			-Custom private messages folders (for each user)
+###		27.	message_folders			-Custom private messages folders (for each user)
 See privmsgs_rules
 
-###		33.	message_rules				-Message rules, e.g. "if * then move * into folders
+###		28.	message_rules				-Message rules, e.g. "if * then move * into folders
 This table is poorly documented. For this reason, folders will not be a part of
 base implementation in v0.1. They will be a high priority addition in the
 future. This means that the privmsgs_folders table will also not be a required
 table for v0.1.
 
-###		34.	sent_messages				-Information (sender, new...) on private messages
+###		29.	sent_messages				-Information (sender, new...) on private messages
 ####			Keys:
     message_id		unsigned int	Foreign	References the private_messages table
     recipient_id	unsigned int	Foreign	Who is the recepient?
@@ -517,16 +517,16 @@ folder_id: see privmsgs_rules.
 
 message_id, author_id, and recipient_id combine to comprise the primary key.
 
-###		35.	profile_fields		-Custom profile fields (name, number characters...)
+###		30.	profile_fields		-Custom profile fields (name, number characters...)
 This table is poorly documented. It will be left out of v0.1, and possibly SFIM
 entirely. All profile fields tables have been abandoned. This includes
 the profile_lang table.
 
-###		36.	ranks							-Ranks (Name, image, minimal # of posts)
+###		31.	ranks							-Ranks (Name, image, minimal # of posts)
 It is not at all clear what this table does. It has been left out of the first
 version of the SFIM standard.
 
-###		37.	reports						-Reported posts
+###		32.	reports						-Reported posts
 ####			Keys:
     report_id	unsigned int	Primary	Key														auto_increment
     reason_id	unsigned int	Foreign References the reports_reasons table
@@ -544,7 +544,7 @@ The following fields are required:
 * post_id
 * user_id
 
-###		38. report_reasons		-Reasons for reported posts and disapprovals
+###		33. report_reasons		-Reasons for reported posts and disapprovals
 ####			Keys:
     reason_id	unsigned int	Primary	Key
 
@@ -553,7 +553,7 @@ The following fields are required:
     description	text			What is a boilerplate description of this reason?
     order				smallint	16 possible values
 
-###		41.	session_keys			-Autologin feature
+###		34.	session_keys			-Autologin feature
 ####			Keys:
     key_id	char					Primary	Key													SHA-2 hash
     user_id	unsigned int	Foreign	References the people table.
@@ -568,16 +568,16 @@ phpBB uses an MD5 hash, which is not secure. Also, because of collisions, the
 method was using both key_id and user_id as a primary key. SHA-2 is known for
 preventing collisions, so this should no longer be needed.
 
-###		43.	smilies						-Smilies (text => image)
+###		35.	smilies						-Smilies (text => image)
 This table doesn't make sense to me. As much as I would like to include smilies
 for v0.1, I don't think it's feasible based on this table. It will be a high
 priority feature for future updates.
 
-###		44.	styles						-Style = template + theme + imageset
+###		36.	styles						-Style = template + theme + imageset
 These style tables don't make any sense to me. I will be excluding them from the
 SFIM standard.
 
-###		45.	topics						-Topics in forums
+###		37.	topics						-Topics in forums
 ####			Keys:
     topic_id			unsigned int	Primary	Key												auto_increment
     forum_id			unsigned int	Foreign	References the forums table.
@@ -608,7 +608,7 @@ Interestingly the first_post_id is not indicative of a multiple relationship
 like it usually is. I actually think that this is also indicative that we can
 normalize it out of our model in some way.
 
-###		46.	topic_postings		-Who posted in which topic (used for the small dots)
+###		39.	topic_postings		-Who posted in which topic (used for the small dots)
 ####			Keys:
 		user_id		unsigned int	Foreign References the people table.
 		topic_id	unsigned int	Foreign References the topics table.
@@ -621,7 +621,7 @@ user_id and topic_id together make up the primary key.
 
 The attribute, topic_posted does not make sense to me.
 
-###		50.	people							-Registered people.
+###		40.	people							-Registered people.
 ####			Keys:
 		user_id					unsigned int	Primary	Key											auto_increment
 		username				varchar				Unique	How the user is known in the community
@@ -740,7 +740,7 @@ The following are required fields:
 * user_email_hash
 * user_type
 
-###		51.	warnings					-Warnings given to people
+###		41.	warnings					-Warnings given to people
 ####			Keys:
 		warning_id	unsigned int	Primary Key
 		user_id			unsigned int	Foreign	References the people table.
@@ -750,7 +750,7 @@ The following are required fields:
 ####			Attributes:
 		warning_date	timestamp	When was the warning given?
 
-###		52.	words							-Censored words
+###		42.	words							-Censored words
 ####			Keys:
 		word_id	unsigned int	Primary	Key
 
@@ -760,5 +760,5 @@ The following are required fields:
 
 Users are encouraged to use regular expressions to implement word bans.
 
-###		53. zebras						-Friends or foes
+###		43. zebras						-Friends or foes
 This table doesn't even begin to make sense.
