@@ -43,29 +43,6 @@ reference implementations that are part of the SFIM project will be available
 under the MIT license.
 
 ## Tables
-###		1.	acl_groups					-Permission roles assigned
-Documentation of acl_groups has been deleted. Unfortunately, this means that I
-will have to reverse engineer acl_groups by looking at how the code base of
-pbpBB interacts with acl_groups.
-
-I think that this table is actually a description of a relational entity. It
-relates a user to many roles and roles to many users. However, some of the other
-tables seem to indicate that this is no longer how roles are assigned and that
-users are only assigned one role, meaning that this table has been deprecated
-within the phpBB project. I think that this is a mistake because it is not a
-very flexible situation that could possibly lead to a proliferation of roles and
-user rights that is not a very clear and concise method of knowing which users
-have what permissions.
-
-####			Keys:
-    acl_group_id		unsigned int	Primary	Key
-    acl_group_name	varchar				Unique	Name of the group
-    role_id					unsigned int	Foreign	Reference the acl_roles table
-    user_id					unsigned int	Foreign	Reference the people table
-
-####			Attributes
-    description	text					What is this group for?
-
 ###		2.	acl_options					-List of possible permissions
 ####			Keys:
     auth_option_id:	unsigned int	Primary	Key
@@ -165,7 +142,7 @@ to the table is created.
 ###		7.	bans							-Banned users, ip addresses, or emails
 This table doesn't make much sense. I think the best way to do this would be to
 separate this table into three different tables. the user_bans, the
-ip_bans, and the email_bans. However, for v0.1 of SFIM I would like to keep as 
+ip_bans, and the email_bans. However, for v0.1 of SFIM I would like to keep as
 close as possible to the implementation used by phpBB so that the DNA of SFIM is
 clearer. It must be kept in mind that at this early stage SFIM is a fork of
 phpBB's underlying schema.
@@ -217,22 +194,6 @@ as a primary key. It is important to note that topics and posts are not the same
 things. A topic is a conversation. A post is a single message within a
 conversation. A single message cannot exist without a topic.
 
-###		10.	bots								-Spiders/Bots
-####			Keys:
-    bot_id	unsigned int Primary	Key	auto_increment
-
-####			Attributes:
-    bot_active	boolean				Is the bot in service?							true
-    bot_name		varchar				What is the name of the bot?
-    user_id			unsigned int	References people table
-    agent				varchar				Undocumented
-    ip_addr			varchar				What is the ip address of the bot?
-
-user_id is a required field and cannot be left blank.
-
-I have no idea what a spider is or what the agent attribute describes. This table
-is likely to get modified for version 0.2.
-
 ###		11.	config							-Configuration information
 The documentation for this table doesn't make sense to me. I think that I can
 get away with not having this table at all. I think configuration can be handled
@@ -241,23 +202,12 @@ by a different method, such as flat files on the server.
 ###		12.	confirmations				-Contains session information for confirm pages
 ####			Keys:
     confirm_id	char	Primary	Key									auto_increment
-    session_id	char	Foreign	References sessions
 
 ####			Attributes:
     confirm_type	int			The action the user was taking											0
     code					varchar	The character code that will be displayed.
     seed					int			The seed that should be used to initialize the RNG.	0
     attempts			int			The number of attempts that have been made.					0
-
-###		13.	username_rules			-Disallowed usernames
-####			Keys:
-    disallow_id	unsigned int	Primary	Key
-
-####			Attributes:
-    disallow_username	varchar	What specifically is not allowed.
-
-Implementers of SFIM interfaces are encouraged to make use of regular
-expressions for this table.
 
 ###		14. drafts							-Drafts of future posts/private messages.
 ####			Keys:
@@ -376,19 +326,6 @@ invited emails to the whitelist. Another way to do it is to perform a hashed
 handshake for people attempting to use the forum. Either way, a list of people who
 are allowed to use a forum is better than having a password for a forum.
 
-###		18.	current_forum_users	-Store who is logged into protected forums
-####			Keys:
-    session_id	binary char		Foreign	References the sessions table.
-    forum_id		unsigned int	Foreign	References the forums table.
-
-####			Attributes:
-This table does not have a primary key field but instead uses the combination of
-session_id and forum_id. Also, the user_id field does not need to be
-stored in this table. The reason for this is that the session information drawn
-from the sessions table will already contain the user information. Implementers
-of SFIM who want to do things this way for speed purposes are encouraged to, but
-this won't be part of future SFIM models because it is less clear.
-
 ###		19. forum_visits				-Unread post information is stored here.
 ####			Keys:
     user_id		unsigned int	Foreign	References the people table.
@@ -410,33 +347,6 @@ required fields.
 
 This table does not have any primary key or a gauruntee that the information
 held in it is unique. This will need to be remedied in the future.
-
-###		21.	groups							-Usergroups
-####			Keys:
-    group_id	unsigned int	Primary	Key
-
-####			Attributes:
-    type						tinyint				16 possible values													1
-    founder_manage	boolean				Is the founder responsible for this group?	0
-    name						varchar				What is the name of this group?
-    description			text					What is this group for and why does it exist?
-    display					boolean				Can people see this group?							false
-    avatar					varchar				What is the image for this group?
-    avatar_type			tinyint(4)		What is the file type for the group avatar?	0
-    avatar_width		tinyint(4)		How wide is the avatar image?								0
-    avatar_height		tinyint(4)		How tall is the avatar image?								0
-    rank						unsigned int	Undocumented																0
-    color						varchar				Undocumented
-    sig_char_num		unsigned int	How many characters in signatures allowed?	0
-    receive_pm			boolean				Can users receive private messages?			false
-    msg_limit_size	unsigned int	What's the biggest private message sendable	0
-    legend					boolean				Does this group have a legend?					 true
-
-I don't know what the color attribute is for, but I assume that it is for a
-web interface setting. I still believe that settings such as this should be
-separated out into a config file for the whole web interface to use. But since I
-am unclear on what this is for, I will leave it for now an remove it for version
-0.2 if it becomes clear that is merely an interface setting.
 
 ###		22. icons								-Post icons
 I think that this table is purely about how the user interface will look. This
@@ -491,7 +401,6 @@ The combination of user_id and attempt_date create the primary key.
 ####			Keys:
     forum_id	unsigned int	Foreign	References the forums table
     user_id		unsigned int	Foreign	References the people table
-    group_id	unsigned int	Foreign	References the groups table
 
 ####			Attributes:
     display_on_index	boolean	Should this information be stored on the index?	1
@@ -515,9 +424,11 @@ this be part of the base design.
 ####			Keys:
     post_id		unsigned int	Primary Key													auto_increment
     topic_id	unsigned int	Foreign	References the topics table
-    forum_id	unsigned int	Foreign	References the forums table
     poster_id	unsigned int	Foreign	Who posted this topic?
     edit_user	unsigned int	Foreign	Who renamed this topic?
+
+forum_id is not needed because that information can be pulled from the topic
+information that we already have.
 
 ####			Attributes:
     poster_ip_addr		varchar				The IP address where the post originated.
@@ -642,42 +553,6 @@ The following fields are required:
     description	text			What is a boilerplate description of this reason?
     order				smallint	16 possible values
 
-###		39.	search_results		-Last searches
-This series of these tables don't make sense to me. Searches should not be
-stored in the database.
-
-###		40.	sessions					-Sessions to identify people browsing the forum
-####			Keys:
-    session_id	unsigned int	Primary	Key
-    user_id			unsigned int	Foreign	References to the people table
-
-####			Attributes:
-    last_visit_date	timestamp			When was the last time the user visited?		0
-    start						unsigned int	When did the user log in.										0
-    ip							varchar				Where is the user?
-    browser					varchar				What kind of browser is the user using?
-    page						varchar				What page is the user currently viewing?
-    viewonline			boolean				I have no idea what this field does			 true
-    autologin				boolean				Does the user want to be remembered?		false
-    admin						boolean				Is this user an administrator?					false
-
-user_id is a required field.
-
-I have changed session_id to an unsigned int and given it the auto_increment
-directive. I have done this because primary keys should be gaurunteed to be
-unique.
-
-I'm not sure the time field makes sense. That should probably be something
-that's calculated through logic. In fact, I'm removing that field now.
-
-I'm not sure, but I think that the page attribute should be a foreign key... But
-I can't think of how that would be done since all of the different possible
-pages are part of different tables. The two options are to leave this as is or
-to find a way to modify the schema such that posts, topics, forums, and private
-messages are all the same thing. I think this is probably an untenable task.
-More than likely how this information will be stored is as a page determined by
-the URI passed to the logic controller.
-
 ###		41.	session_keys			-Autologin feature
 ####			Keys:
     key_id	char					Primary	Key													SHA-2 hash
@@ -692,15 +567,6 @@ user_id is a required field.
 phpBB uses an MD5 hash, which is not secure. Also, because of collisions, the
 method was using both key_id and user_id as a primary key. SHA-2 is known for
 preventing collisions, so this should no longer be needed.
-
-###		42.	trusted_sites			-Trusted websites for downloads
-####			Keys:
-    site_id	unsigned int	Primary	Key	auto_increment
-
-####			Attributes:
-    ip					varchar	Where is the website?
-    hostname		varchar	What is the URL of the site's homepage?
-    ip_exclude	boolean	Is this website untrusted?							false
 
 ###		43.	smilies						-Smilies (text => image)
 This table doesn't make sense to me. As much as I would like to include smilies
@@ -754,45 +620,6 @@ Because this is an associative entity, in order to gauruntee unique entities,
 user_id and topic_id together make up the primary key.
 
 The attribute, topic_posted does not make sense to me.
-
-###		47.	tracked_topics		-Unread post information is stored here
-####			Keys:
-		user_id 	unsigned int	Foreign References the people table.
-		topic_id	unsigned int	Foreign	References the topics table.
-
-####			Attributes:
-		mark_time	timestamp	Last visit to this topic	0
-
-Because this is an associative entity, in order to quaruntee unique entities,
-user_id and topic_id together make up the primary key. The forum_id key has been
-removed as this information will be stored in the topic entity.
-
-###		48.	watched_topics		-Who wants notifications about changes to what topic
-####			Keys:
-		topic_id	unsigned int	Foreign References the topics table.
-		user_id		unsigned int	Foreign	References the people table.
-
-####			Attributes:
-		notify_status	boolean	Does the user need to be notified of new posts?	false
-
-Because this is an associative entity, in order to quaruntee unique entities,
-user_id and topic_id together make up the primary key.
-
-###		49.	memberships				-Groups of people.
-This table describes the membership of people in groups. This is a poor table
-name as it is not clear what it is that it represents. This will be renamed
-before v0.1
-
-####			Keys:
-		group_id	unsigned int	Foreign References the groups table.
-		user_id		unsigned int	Foreign	References the people table.
-
-####			Attributes:
-		group_leader	boolean	Is this user a leader of this group?
-		user_pending	boolean	Is this user awaiting approval?
-
-As this is an associative entity, group_id and user_id together make the
-primary key in order to gauruntee uniqueness.
 
 ###		50.	people							-Registered people.
 ####			Keys:
@@ -853,9 +680,6 @@ primary key in order to gauruntee uniqueness.
 		interests					text					What does the user like?
 		activation_key		varchar				The key required to activate the account
 		new_passowrd			varchar				The SHA-2 hash value of a random password
-
-group_id does not make sense in this table because it is a many to many
-relationship. It will be excluded.
 
 I'm not convinced that username_clean is a necessity. It will be deprecated. The
 reason I am currently thinking that it is that the logic controllers programmed

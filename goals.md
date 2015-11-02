@@ -53,6 +53,56 @@ management system to a SFIM management system be able to port their forum
 easily. For this reason the ER Model will be similar to other popular forum
 management systems.
 
+### Normalization
+Currently, the ER-Model resultant from taking inspiration from the phpBB schema
+is unusably complex. It needs to be normalized. To start out with, it is unclear
+what the groups table is for, or accomplishes. It is known that it helps to give
+permissions to users in mass instead of individually. There however is also a
+moderators table. For SFIM 0.1, the model is not targeting massive
+multicommunity sites such as 4chan or Reddit. Information about what communities
+someone is a moderator in is not necessary. Instead there will be three user
+classes. There are moderators, who have the power to delete posts and ban users.
+There are administrators who have the power to create forums, and escalate users
+to moderator status, and moderators to administrator status. Finally there are
+users who only can make posts and replies while maintaining their own profiles.
+
+I don't see any reason for posts to be related to forums. They are already
+related through topics. Topics are just collections of posts, sorted by which
+are the newest. I'm going to commune with my forum consultant to see if he can
+think of a reason for things to be this way.
+
+I think the topic tracking tables could be removed from the database. Currently
+they serve to attach a time to a change that was made so that the user can tell
+what meaningful changes have happened since the last time they were logged in.
+Posts already have a time attribute. The logical interface should handle these
+sorts of things. However, the watched topics table should remain so that users
+can be notified of changes to forums they really care about. This is because
+this won't happen based on a time interaction, but instead an instant
+notification such as a message or even better an email.
+
+I believe that the following tables can be done as flat files that are checked
+against:
+* Trusted sites
+* Bots
+* Username rules
+
+I say this because I don't know of a way of forcing an SQL insert query to
+follow a logical rule. They only enforce relational parameters. You can also
+protect tables, if I recall correctly, but that doesn't help with forcing a
+table to compare values against something like a regular expression.
+
+I think that bots can just be special users, handled by external software,
+instead of being stored in the database.
+
+Posts do not need to be related to forums.
+
+Sessions should probably be handled in a different manner than a table in the
+database. This creates a permanent record of something that should really be
+handled on a present need basis. This also makes it possible to lock the
+database by having too many log ins and log outs. However, I don't know much
+about handling sessions so this might end back up in the schema again later.
+This is okay.
+
 ## Database Management System
 The reference implementation Database Management System, or DBMS, will be
 written in SQL. The reason for this is that SQL is an extremely widespread
