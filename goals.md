@@ -103,6 +103,13 @@ database by having too many log ins and log outs. However, I don't know much
 about handling sessions so this might end back up in the schema again later.
 This is okay.
 
+I have modified the tables extensively. I've grown concerned that I know longer
+know for sure if the system will work as anticipated. One of my original goals
+was to maintain familiarity to users already familiar with how forums work. I
+think I would rather start with a simple core and expand over time. I am going
+to spend some time working on the phpBB derived tables, but then if I don't
+think that is working, I am going to revisit this goal
+
 ## Database Management System
 The reference implementation Database Management System, or DBMS, will be
 written in SQL. The reason for this is that SQL is an extremely widespread
