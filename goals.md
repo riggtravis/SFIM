@@ -30,6 +30,11 @@ way an android app developer can create a generic app that can be used to log
 into any SFIM forum, and a user can select any app targeting SFIM forums to
 access one or more of their favorite forums.
 
+SFIM is intended to feature a semi-threaded structure in which users post
+replies to topics but not to eachother. This design choice was made in order to
+discourage conversations from splintering into fractally geometric conversations
+that are hard to navigate, and to encourage conversations to remain focused.
+
 ## Entity-Relationship Model
 The very most important component of SFIM will be the Entity-Relationship
 Model, or ER Model, describing how databases using SFIM should be
