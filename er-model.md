@@ -43,12 +43,11 @@ The topics table is used to describe different conversations.
 #### Keys:
 	topic_id	unsigned int	Primary	Key														auto_increment
 	forum_id	unsigned int	Foreign	References the forums table.
-	user_id		unsigned int	Foreign	References the people table.
 
 #### Attributes:
 	subject	varchar		What is this topic about?
 	created	timestamp	When was the topic started?
-	sticky	boolean		Is this topic sticky?				true
+	sticky	boolean		Is this topic sticky?				false
 
 ### 3. posts
 The topics table is used to describe what people have said in various topics.
@@ -88,8 +87,9 @@ permanently banned.
 	user_id	unsigned int	Foreign	References the people table
 
 #### Attributes:
-	start	date	When did the user get banned?
-	end		date	When will the user be re-enabled.
+	start		date	When did the user get banned?
+	end			date	When will the user be re-enabled.
+	reason	varchar	Why is the user being banned.
 
 ### 6. groups
 The groups table represents user groups who can be given special priveleges. For
@@ -97,6 +97,7 @@ example, moderators.
 
 #### Keys:
 	group_id	unsigned int	Primary	Key
+	tite			varchar				Unique	What is this group called?
 
 ### 7. memberships
 This is a relational entity that describes which people are members of which
