@@ -46,7 +46,6 @@ The topics table is used to describe different conversations.
 
 #### Attributes:
 	subject	varchar		What is this topic about?
-	created	timestamp	When was the topic started?
 	sticky	boolean		Is this topic sticky?				false
 
 ### 3. posts
@@ -58,8 +57,8 @@ The topics table is used to describe what people have said in various topics.
 	user_id		unsigned int	Foreign	References the people table.
 
 #### Attributes:
-	posted	timestamp	When was the post made?
-	message	text			What is being said?
+	posted_date	timestamp	When was the post made?
+	message			text			What is being said?
 
 ### 4. people
 The people table is used to describe users that are making posts and topics to
@@ -87,9 +86,9 @@ permanently banned.
 	user_id	unsigned int	Foreign	References the people table
 
 #### Attributes:
-	start		date	When did the user get banned?
-	end			date	When will the user be re-enabled.
-	reason	varchar	Why is the user being banned.
+	start_date	date		When did the user get banned?
+	end_date		date		When will the user be re-enabled.
+	reason			varchar	Why is the user being banned.
 
 ### 6. groups
 The groups table represents user groups who can be given special priveleges. For
