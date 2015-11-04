@@ -45,8 +45,8 @@ The topics table is used to describe different conversations.
 	forum_id	unsigned int	Foreign	References the forums table.
 
 #### Attributes:
-	subject	varchar		What is this topic about?
-	sticky	boolean		Is this topic sticky?				false
+	subject				varchar		What is this topic about?
+	sticky_status	boolean		Is this topic sticky?				false
 
 ### 3. posts
 The topics table is used to describe what people have said in various topics.
