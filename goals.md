@@ -61,6 +61,12 @@ the web interface level.
 The reference implementation of a web interface using SFIM will be written in
 Python using Pyramid.
 
+For the templating language, I plan on using mako templates. They have a syntax
+that reads like HTML, making them a good choice for people already familiar with
+html or something closely related to it (like bbcode) will feel right at home
+reading it. Another advantage is that since there is less python wrapping, it's
+easier for a text editor to highlight syntax, making it easier to find problems.
+
 The implementation of the web interface will be available under an MIT license
 
 ### Why Python?
