@@ -67,10 +67,10 @@ html or something closely related to it (like bbcode) will feel right at home
 reading it. Another advantage is that since there is less python wrapping, it's
 easier for a text editor to highlight syntax, making it easier to find problems.
 
-I will have to make a decision between using pyramid_simpleforms, formish, or
+I will have to make a decision between using pyramid_simpleforms, WTForm, or
 ToscaWidgets to handle forms. pyramid_simpleforms has the advantage of pyramid
 integration, however it is pyramid specific, which I'm not sure matches with the
-goals of this project. Formish is simple and flexible, which matches well with
+goals of this project. WTForms is simple and flexible which matches well with
 the goals of this project, however ToscaWidgets provides a highly powerful
 method of creating more than just forms. This could be something that I want to
 do later on depending on how the project grows.
