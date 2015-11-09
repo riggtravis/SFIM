@@ -45,8 +45,8 @@ The topics table is used to describe different conversations.
 	forum_id	unsigned int	Foreign	References the forums table.
 
 #### Attributes:
-	subject	varchar		What is this topic about?
-	sticky	boolean		Is this topic sticky?				false
+	subject				varchar		What is this topic about?
+	sticky_status	boolean		Is this topic sticky?				false
 
 ### 3. posts
 The topics table is used to describe what people have said in various topics.
@@ -69,9 +69,9 @@ the forum.
 	username	varchar				Unique	The public name the user is known by.
 
 #### Attributes:
-	password	varchar	SHA2 Hashed version of the user's password.
-	avatar		char		The name of the users avatar in the filesystem.
-	signature	text		What does the user want to say at the bottom of all posts.
+	password	char	A password hash stored via the SHA512-Crypt algorithm.
+	avatar		char	The name of the users avatar in the filesystem.
+	signature	text	What does the user want to say at the bottom of all posts.
 
 ### 5. bans
 The bans table represents the people who have been banned. This is a seperate
@@ -96,7 +96,7 @@ example, moderators.
 
 #### Keys:
 	group_id	unsigned int	Primary	Key
-	tite			varchar				Unique	What is this group called?
+	title			varchar				Unique	What is this group called?
 
 ### 7. memberships
 This is a relational entity that describes which people are members of which

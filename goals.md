@@ -52,84 +52,33 @@ be easier for other developers to make their components work together.
 
 The ER Model will be available to anyone under the terms of the GPL v2.0
 
-### Compatability With Others
-It is important that forum administrators choosing to switch from one forum
-management system to a SFIM management system be able to port their forum
-easily. For this reason the ER Model will be similar to other popular forum
-management systems.
-
-### Normalization
-Currently, the ER-Model resultant from taking inspiration from the phpBB schema
-is unusably complex. It needs to be normalized. To start out with, it is unclear
-what the groups table is for, or accomplishes. It is known that it helps to give
-permissions to users in mass instead of individually. There however is also a
-moderators table. For SFIM 0.1, the model is not targeting massive
-multicommunity sites such as 4chan or Reddit. Information about what communities
-someone is a moderator in is not necessary. Instead there will be three user
-classes. There are moderators, who have the power to delete posts and ban users.
-There are administrators who have the power to create forums, and escalate users
-to moderator status, and moderators to administrator status. Finally there are
-users who only can make posts and replies while maintaining their own profiles.
-
-I don't see any reason for posts to be related to forums. They are already
-related through topics. Topics are just collections of posts, sorted by which
-are the newest. I'm going to commune with my forum consultant to see if he can
-think of a reason for things to be this way.
-
-I think the topic tracking tables could be removed from the database. Currently
-they serve to attach a time to a change that was made so that the user can tell
-what meaningful changes have happened since the last time they were logged in.
-Posts already have a time attribute. The logical interface should handle these
-sorts of things. However, the watched topics table should remain so that users
-can be notified of changes to forums they really care about. This is because
-this won't happen based on a time interaction, but instead an instant
-notification such as a message or even better an email.
-
-I believe that the following tables can be done as flat files that are checked
-against:
-* Trusted sites
-* Bots
-* Username rules
-
-I say this because I don't know of a way of forcing an SQL insert query to
-follow a logical rule. They only enforce relational parameters. You can also
-protect tables, if I recall correctly, but that doesn't help with forcing a
-table to compare values against something like a regular expression.
-
-I think that bots can just be special users, handled by external software,
-instead of being stored in the database.
-
-Posts do not need to be related to forums.
-
-Sessions should probably be handled in a different manner than a table in the
-database. This creates a permanent record of something that should really be
-handled on a present need basis. This also makes it possible to lock the
-database by having too many log ins and log outs. However, I don't know much
-about handling sessions so this might end back up in the schema again later.
-This is okay.
-
-I have modified the tables extensively. I've grown concerned that I know longer
-know for sure if the system will work as anticipated. One of my original goals
-was to maintain familiarity to users already familiar with how forums work. I
-think I would rather start with a simple core and expand over time. I am going
-to spend some time working on the phpBB derived tables, but then if I don't
-think that is working, I am going to revisit this goal
-
 ## Database Management System
-The reference implementation Database Management System, or DBMS, will be
-written in SQL. The reason for this is that SQL is an extremely widespread
-language, known by many developers, designed to be as human readable as
-possible. However, certain web application programming frameworks have methods
-for creating and interacting with databases without ever writing a single line
-of SQL. This is part of the advantage of SFIM. A programmer is free to use any
-implementation of any component that they feel is best for their needs,
-including creating a new implementation of the entire stack.
-
-The implementation of the DBMS will be available under an MIT license
+After attempting to write a DBMS init script targeting postgres, I learned that
+it is prohibitivly difficult. Instead I'm just going to have to start work at
+the web interface level.
 
 ## Web Interface
 The reference implementation of a web interface using SFIM will be written in
 Python using Pyramid.
+
+For the templating language, I plan on using mako templates. They have a syntax
+that reads like HTML, making them a good choice for people already familiar with
+html or something closely related to it (like bbcode) will feel right at home
+reading it. Another advantage is that since there is less python wrapping, it's
+easier for a text editor to highlight syntax, making it easier to find problems.
+
+I will have to make a decision between using pyramid_simpleforms, WTForm, or
+ToscaWidgets to handle forms. pyramid_simpleforms has the advantage of pyramid
+integration, however it is pyramid specific, which I'm not sure matches with the
+goals of this project. WTForms is simple and flexible which matches well with
+the goals of this project, however ToscaWidgets provides a highly powerful
+method of creating more than just forms. This could be something that I want to
+do later on depending on how the project grows.
+
+I have chosen to use passlib as the encryption library. I have chosen this
+library because it has support for 30 different encryption algorithms. This is
+useful because it is extremely flexible. The other reason I have chosen this
+library is that its documentation is very thorough and supurb.
 
 The implementation of the web interface will be available under an MIT license
 
