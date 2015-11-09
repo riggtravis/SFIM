@@ -75,6 +75,11 @@ the goals of this project, however ToscaWidgets provides a highly powerful
 method of creating more than just forms. This could be something that I want to
 do later on depending on how the project grows.
 
+I have chosen to use passlib as the encryption library. I have chosen this
+library because it has support for 30 different encryption algorithms. This is
+useful because it is extremely flexible. The other reason I have chosen this
+library is that its documentation is very thorough and supurb.
+
 The implementation of the web interface will be available under an MIT license
 
 ### Why Python?
