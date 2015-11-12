@@ -45,6 +45,7 @@ The topics table is used to describe different conversations.
 	forum_id	unsigned int	Foreign	References the forums table.
 
 #### Attributes:
+	start_date		timestamp	When was this topic started?
 	subject				varchar		What is this topic about?
 	sticky_status	boolean		Is this topic sticky?				false
 
