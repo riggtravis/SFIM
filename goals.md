@@ -52,6 +52,8 @@ be easier for other developers to make their components work together.
 
 The ER Model will be available to anyone under the terms of the GPL v2.0
 
+We need to find a way to keep track of unread messages for the user.
+
 ## Database Management System
 After attempting to write a DBMS init script targeting postgres, I learned that
 it is prohibitivly difficult. Instead I'm just going to have to start work at
