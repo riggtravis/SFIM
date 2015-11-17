@@ -74,8 +74,9 @@ The people table is used to describe users that are making posts and topics to
 the forum.
 
 #### Keys:
-	user_id		unsigned int	Primary	Key
-	username	varchar				Unique	The public name the user is known by.
+	user_id				unsigned int	Primary	Key
+	username			varchar				Unique	The public name the user is known by.
+	email_address	varchar				Unique	How the user can be reached.
 
 #### Attributes:
 	password	char			A password hash stored via the SHA512-Crypt algorithm.

@@ -120,3 +120,14 @@ of this android app will be given as the project grows and as the lead developer
 learns how to create apps for android.
 
 The implementation of an Android App will be available under an MIT license.
+
+## Project Roadmap
+This goes beyond just when features need to be done. It entails where the
+project's leadership and organization will be over time. At some point I will be
+ill equiped for maintaining this project because I will be busy with other
+things. Which is not to say that the *leader* of the SFIM project and all of its
+parts needs to only have one responsibility. It means that I need to prepare
+the project to be ready to be maintained by others with me providing guidance
+for the overall direction. I will still be a contributor, but I will mostly take
+a leadership role. The amount of code I commit to the project will be greatly
+reduced in this state of affairs.
