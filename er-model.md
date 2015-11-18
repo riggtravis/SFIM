@@ -82,6 +82,7 @@ the forum.
 	password	char			A password hash stored via the SHA512-Crypt algorithm.
 	avatar		char			The name of the users avatar in the filesystem.
 	signature	text			What does the user want to say at the bottom of all posts.
+	bio				text			What does the user want others to know about them.
 	join_date	timestamp	When did the user join?
 
 ### 5. bans
