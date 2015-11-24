@@ -52,6 +52,8 @@ be easier for other developers to make their components work together.
 
 The ER Model will be available to anyone under the terms of the GPL v2.0
 
+We need to find a way to keep track of unread messages for the user.
+
 ## Database Management System
 After attempting to write a DBMS init script targeting postgres, I learned that
 it is prohibitivly difficult. Instead I'm just going to have to start work at
@@ -118,3 +120,14 @@ of this android app will be given as the project grows and as the lead developer
 learns how to create apps for android.
 
 The implementation of an Android App will be available under an MIT license.
+
+## Project Roadmap
+This goes beyond just when features need to be done. It entails where the
+project's leadership and organization will be over time. At some point I will be
+ill equiped for maintaining this project because I will be busy with other
+things. Which is not to say that the *leader* of the SFIM project and all of its
+parts needs to only have one responsibility. It means that I need to prepare
+the project to be ready to be maintained by others with me providing guidance
+for the overall direction. I will still be a contributor, but I will mostly take
+a leadership role. The amount of code I commit to the project will be greatly
+reduced in this state of affairs.

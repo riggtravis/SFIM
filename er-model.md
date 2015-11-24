@@ -29,6 +29,14 @@ later with important features.
 ### 1. forums
 The forums table is used to describe different categories of discussion.
 
+I will probably need to come up with a way to allow users to sort their
+discussion categories by importance. A simple way would be to give a single
+attribute to forums that is user editable that can be sorted against. This
+gives users the ability to define that an important forum has a really big
+number indicating that it is more important than a forum with a small number.
+For now I will leave this decision for later after I am done testing the
+current SFIM standard using SINS.
+
 #### Keys:
 	forum_id	unsigned int	Primary Key
 	parent_id	unsigned int	Foreign	References the forums table.
@@ -45,6 +53,7 @@ The topics table is used to describe different conversations.
 	forum_id	unsigned int	Foreign	References the forums table.
 
 #### Attributes:
+	start_date		timestamp	When was this topic started?
 	subject				varchar		What is this topic about?
 	sticky_status	boolean		Is this topic sticky?				false
 
@@ -65,13 +74,16 @@ The people table is used to describe users that are making posts and topics to
 the forum.
 
 #### Keys:
-	user_id		unsigned int	Primary	Key
-	username	varchar				Unique	The public name the user is known by.
+	user_id				unsigned int	Primary	Key
+	username			varchar				Unique	The public name the user is known by.
+	email_address	varchar				Unique	How the user can be reached.
 
 #### Attributes:
-	password	char	A password hash stored via the SHA512-Crypt algorithm.
-	avatar		char	The name of the users avatar in the filesystem.
-	signature	text	What does the user want to say at the bottom of all posts.
+	password	char			A password hash stored via the SHA512-Crypt algorithm.
+	avatar		char			The name of the users avatar in the filesystem.
+	signature	text			What does the user want to say at the bottom of all posts.
+	bio				text			What does the user want others to know about them.
+	join_date	timestamp	When did the user join?
 
 ### 5. bans
 The bans table represents the people who have been banned. This is a seperate
